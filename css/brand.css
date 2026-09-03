@@ -1,0 +1,30 @@
+/**
+ * BRAND TOKENS — BVLLY
+ * Edit these values if the palette changes. Layout lives in main.css.
+ */
+:root {
+  /* 1. Gold mark / buttons */
+  --brand-primary: #d4af7a;
+
+  /* 2. Headings and primary text (on dark ground) */
+  --brand-dark: #f3eee6;
+
+  /* 3. Page background */
+  --brand-bg: #0c0b0a;
+
+  /* 4. Cards, header, surfaces */
+  --brand-surface: #161412;
+
+  /* 5. Secondary accent */
+  --brand-accent: #8f3b32;
+
+  --font-heading: 'Cinzel', 'Times New Roman', serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+
+  --text: var(--brand-dark);
+  --text-muted: #a89f93;
+  --border: #2c2824;
+  --radius: 2px;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  --max-width: 1180px;
+}
