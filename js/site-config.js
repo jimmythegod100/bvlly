@@ -1,13 +1,14 @@
 /**
  * Site configuration — BVLLY draft.
- * Swap copy, prices, and image paths here. Drop photos into images/products/.
+ * Human streetwear. The miniature exotic bulldog is the mark, not the customer.
+ * Drop photos into images/products/.
  */
 window.SITE_CONFIG = {
   brand: {
     name: 'BVLLY',
     shortName: 'BVLLY',
     logoText: 'B V L L Y',
-    tagline: 'Apparel for miniature exotic bulldogs.',
+    tagline: 'Streetwear marked by the miniature exotic bulldog.',
     email: 'hello@bvlly.com',
     phone: '',
     address: 'Online — ships from the Central Valley, CA',
@@ -15,20 +16,20 @@ window.SITE_CONFIG = {
     instagram: ''
   },
   hero: {
-    kicker: 'Miniature exotic · chest-first cut',
-    headline: 'Cut for the compact bully.',
-    subhead: 'Heavyweight hoodies, walk tees, and outerwear sized for miniature exotic bulldogs — short back, wide chest, no costume fit.',
+    kicker: 'Said Bully · Central Valley',
+    headline: 'Human clothes. Bully bloodline.',
+    subhead: 'Heavyweight hoodies, tees, and outerwear for people. The miniature exotic bulldog is the mark — compact, stubborn, unbothered — not who we dress.',
     image: '',
     ctaPrimary: { label: 'Shop the catalog', href: 'shop.html' },
     ctaSecondary: { label: 'The story', href: 'about.html' }
   },
   about: {
-    headline: 'Built around the dog, not a costume.',
-    intro: 'BVLLY — said “Bully” — is a clothing label for miniature exotic bulldogs. We start with the frame: compact, muscular, short-backed. Then we cut clothes that actually sit on it.',
+    headline: 'The dog is the mark. You wear the clothes.',
+    intro: 'BVLLY — said “Bully” — is a human clothing label. The miniature exotic bulldog sits on the chest, the hood, and the hangtag. The garments are cut for people.',
     body: [
-      'Generic pet apparel is graded from long-backed dogs. On a miniature exotic, that means extra length, a floating chest, and sleeves that do nothing. Our blocks are chest-first. Necks are wider. Back lengths are shorter. Hardware is sized so a walk harness can sit over a hoodie without fighting the fabric.',
-      'This draft site is the frame for the brand. Product photos, lookbook stills, and final colorways land once apparel media is ready. Until then, every piece below is a real intended SKU — name, cut, and price — waiting on photography.',
-      'We are not a costume shop. No capes, no cartoon prints as the main line. The clothes should look like a small streetwear label that happens to dress a bully.'
+      'The breed is the identity: short, thick, unhurried. We borrow that stance for boxy hoods, heavy cotton, and a small mark that does not need to shout. No costumes. No pet line. If it is in the catalog, a person puts it on.',
+      'This draft is the frame for the brand. Product photos, lookbook stills, and final colorways land once apparel media is ready. Until then every piece below is an intended SKU — name, cut, and price — waiting on photography.',
+      'First drop is built like a small streetwear house: essentials you live in, outerwear for night, a seasonal jacket, and a few mark accessories.'
     ],
     image: ''
   },
@@ -41,12 +42,12 @@ window.SITE_CONFIG = {
     {
       id: 'outerwear',
       name: 'Outerwear',
-      tagline: 'Vests, bombers, and stadium layers for short walks and long sits.'
+      tagline: 'Bombers, vests, and stadium layers.'
     },
     {
       id: 'accessories',
       name: 'Accessories',
-      tagline: 'Bandanas, collars, and harnesses that match the clothes.'
+      tagline: 'Caps, totes, and small goods with the mark.'
     },
     {
       id: 'the-drop',
@@ -59,10 +60,10 @@ window.SITE_CONFIG = {
       id: 'box-hood',
       name: 'Box Hood',
       collection: 'essentials',
-      price: 78,
-      sizes: ['XXS', 'XS', 'S', 'M'],
+      price: 88,
+      sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       colors: ['Ink', 'Bone'],
-      description: 'A cropped, square hoodie with a wide collar and short saddle. Cut to sit at the last rib on a compact bully, not mid-loin.',
+      description: 'Heavyweight fleece hoodie with a square, dropped shoulder. Rib that holds. The BVLLY mark hits small on the chest.',
       image: 'images/products/box-hood.jpg',
       featured: true
     },
@@ -71,31 +72,31 @@ window.SITE_CONFIG = {
       name: 'Muscle Tee',
       collection: 'essentials',
       price: 42,
-      sizes: ['XXS', 'XS', 'S', 'M'],
+      sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       colors: ['Ink', 'Bone', 'Oxblood'],
-      description: 'Sleeveless cotton jersey with a dropped armhole so the chest can actually fill the cloth. Hem hits above the tuck.',
+      description: 'Sleeveless jersey with a dropped armhole. Cut to sit on the body, not cling. Mark at the hem.',
       image: 'images/products/muscle-tee.jpg',
       featured: true
     },
     {
-      id: 'everyday-walk-tee',
-      name: 'Everyday Walk Tee',
+      id: 'mark-tee',
+      name: 'Mark Tee',
       collection: 'essentials',
-      price: 38,
-      sizes: ['XXS', 'XS', 'S', 'M'],
+      price: 48,
+      sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       colors: ['Ink', 'Stone'],
-      description: 'Short-sleeve tee with a harness gap at the withers. Meant to live under a lead, not just for photos.',
-      image: 'images/products/everyday-walk-tee.jpg',
+      description: 'Short-sleeve heavy cotton. Front mark, nothing else. The tee you wear until it looks older than the brand.',
+      image: 'images/products/mark-tee.jpg',
       featured: true
     },
     {
       id: 'sunday-sweat',
       name: 'Sunday Sweat',
       collection: 'essentials',
-      price: 72,
-      sizes: ['XXS', 'XS', 'S', 'M'],
+      price: 78,
+      sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       colors: ['Bone', 'Charcoal'],
-      description: 'Brushed fleece crew. Raglan shoulder so it clears the neck roll. Rib that does not ride up on a deep chest.',
+      description: 'Brushed fleece crew. Raglan shoulder, clean neck. No giant print — just weight and the wordmark at the hem.',
       image: 'images/products/sunday-sweat.jpg',
       featured: false
     },
@@ -103,10 +104,10 @@ window.SITE_CONFIG = {
       id: 'practice-tank',
       name: 'Practice Tank',
       collection: 'essentials',
-      price: 34,
-      sizes: ['XXS', 'XS', 'S', 'M'],
+      price: 36,
+      sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       colors: ['Ink'],
-      description: 'Lightweight tank for warm days and crate rest. Minimal seam bulk under a harness.',
+      description: 'Lightweight tank. Gym, heat, under a bomber. Minimal seam bulk.',
       image: 'images/products/practice-tank.jpg',
       featured: false
     },
@@ -114,10 +115,10 @@ window.SITE_CONFIG = {
       id: 'track-short',
       name: 'Track Short',
       collection: 'essentials',
-      price: 48,
-      sizes: ['XXS', 'XS', 'S', 'M'],
+      price: 54,
+      sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       colors: ['Ink', 'Bone'],
-      description: 'Split-side short for dogs that still have a waist. Elastic that sits behind the rib, not on the belly.',
+      description: 'Split-side short with an elastic waist. Lined. Meant for movement, not a costume silhouette.',
       image: 'images/products/track-short.jpg',
       featured: false
     },
@@ -125,10 +126,10 @@ window.SITE_CONFIG = {
       id: 'crop-bomber',
       name: 'Crop Bomber',
       collection: 'outerwear',
-      price: 128,
-      sizes: ['XXS', 'XS', 'S', 'M'],
+      price: 168,
+      sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       colors: ['Ink'],
-      description: 'Light bomber with a snap placket and elastic hem. Cropped so the tail set stays clear. Lined, not puffy.',
+      description: 'Light bomber, snap placket, elastic hem. Cropped enough to sit over a Box Hood without swallowing it. Lined, not puffy.',
       image: 'images/products/crop-bomber.jpg',
       featured: true
     },
@@ -136,10 +137,10 @@ window.SITE_CONFIG = {
       id: 'quilted-vest',
       name: 'Quilted Vest',
       collection: 'outerwear',
-      price: 96,
-      sizes: ['XXS', 'XS', 'S', 'M'],
+      price: 128,
+      sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       colors: ['Ink', 'Olive'],
-      description: 'Sleeveless quilt with a high neck and belly panel that actually covers a wide chest. Walk-layer, not a snowsuit.',
+      description: 'Sleeveless quilt with a high neck. Walk-layer for cold mornings. Mark on the left chest.',
       image: 'images/products/quilted-vest.jpg',
       featured: true
     },
@@ -147,44 +148,44 @@ window.SITE_CONFIG = {
       id: 'stadium-jacket',
       name: 'Stadium Jacket',
       collection: 'the-drop',
-      price: 148,
-      sizes: ['XS', 'S', 'M'],
+      price: 198,
+      sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       colors: ['Ink / Gold'],
       description: 'Seasonal shell with contrast binding. Limited colorway — photography lands with the drop.',
       image: 'images/products/stadium-jacket.jpg',
       featured: true
     },
     {
-      id: 'knit-bandana',
-      name: 'Knit Bandana',
+      id: 'logo-cap',
+      name: 'Logo Cap',
       collection: 'accessories',
-      price: 24,
+      price: 38,
       sizes: ['One size'],
-      colors: ['Bone', 'Oxblood'],
-      description: 'Cotton knit triangle. Ties at the nape. Meant to sit with the Box Hood, not fight it.',
-      image: 'images/products/knit-bandana.jpg',
+      colors: ['Ink'],
+      description: 'Structured six-panel. Gold mark on black. Adjustable.',
+      image: 'images/products/logo-cap.jpg',
       featured: false
     },
     {
-      id: 'logo-harness',
-      name: 'Logo Harness',
+      id: 'mark-tote',
+      name: 'Mark Tote',
       collection: 'accessories',
-      price: 64,
-      sizes: ['XXS', 'XS', 'S', 'M'],
-      colors: ['Ink'],
-      description: 'Chest-plate harness with a wide front so it does not pinch a bully neck. Hardware sits off the throat.',
-      image: 'images/products/logo-harness.jpg',
+      price: 44,
+      sizes: ['One size'],
+      colors: ['Bone', 'Ink'],
+      description: 'Heavy canvas tote. The wordmark on one face. Built to carry a hoodie, not look like merch-table leftover.',
+      image: 'images/products/mark-tote.jpg',
       featured: false
     },
     {
-      id: 'night-collar',
-      name: 'Night Collar',
+      id: 'knit-beanie',
+      name: 'Knit Beanie',
       collection: 'accessories',
-      price: 36,
-      sizes: ['XXS', 'XS', 'S', 'M'],
-      colors: ['Ink'],
-      description: 'Short, wide collar for a thick neck. No dangling tags that bounce on a short gait.',
-      image: 'images/products/night-collar.jpg',
+      price: 32,
+      sizes: ['One size'],
+      colors: ['Ink', 'Oxblood'],
+      description: 'Rib knit beanie. Small embroidered mark. Winter drop staple.',
+      image: 'images/products/knit-beanie.jpg',
       featured: false
     }
   ],
@@ -194,7 +195,7 @@ window.SITE_CONFIG = {
     hours: 'Drop inquiries answered within two business days.'
   },
   seo: {
-    description: 'BVLLY — clothing for miniature exotic bulldogs. Chest-first hoodies, tees, outerwear, and accessories. Draft catalog; product photos coming.',
+    description: 'BVLLY — human streetwear marked by the miniature exotic bulldog. Hoodies, tees, outerwear, and accessories. Draft catalog; product photos coming.',
     ogImage: ''
   }
 };

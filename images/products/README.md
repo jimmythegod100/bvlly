@@ -1,21 +1,21 @@
 # Add apparel photos here
 
-Drop product photography into this folder using the SKU file names from `js/site-config.js`.
+Drop product photography into this folder using the SKU file names from `js/site-config.js`. Human garments — on-body or still life.
 
 | File | Piece |
 |------|--------|
 | `box-hood.jpg` | Box Hood |
 | `muscle-tee.jpg` | Muscle Tee |
-| `everyday-walk-tee.jpg` | Everyday Walk Tee |
+| `mark-tee.jpg` | Mark Tee |
 | `sunday-sweat.jpg` | Sunday Sweat |
 | `practice-tank.jpg` | Practice Tank |
 | `track-short.jpg` | Track Short |
 | `crop-bomber.jpg` | Crop Bomber |
 | `quilted-vest.jpg` | Quilted Vest |
 | `stadium-jacket.jpg` | Stadium Jacket |
-| `knit-bandana.jpg` | Knit Bandana |
-| `logo-harness.jpg` | Logo Harness |
-| `night-collar.jpg` | Night Collar |
+| `logo-cap.jpg` | Logo Cap |
+| `mark-tote.jpg` | Mark Tote |
+| `knit-beanie.jpg` | Knit Beanie |
 
 Use JPG or PNG. Portrait 4:5 is the catalog crop. Optional extras:
 

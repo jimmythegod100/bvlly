@@ -1,8 +1,8 @@
 # BVLLY
 
-Static catalog site for **BVLLY** (said “Bully”) — a clothing label for miniature exotic bulldogs.
+Static catalog site for **BVLLY** (said “Bully”) — a **human** streetwear label. The miniature exotic bulldog is the brand mark, not the customer.
 
-This draft follows the HTML client kit used for Valley Notary Services and Vincere Media Works: one `js/site-config.js`, brand tokens in `css/brand.css`, GitHub Pages-ready static files. The brochure kit is stretched into a clothing catalog (shop, collections, product pages). Checkout is not live. Product photos are labeled placeholders until apparel media is dropped in.
+This draft follows the HTML client kit used for Valley Notary Services and Vincere Media Works: one `js/site-config.js`, brand tokens in `css/brand.css`, GitHub Pages-ready static files. Checkout is not live. Product photos are labeled placeholders until apparel media is dropped in.
 
 ## Preview locally
 
@@ -20,9 +20,9 @@ python3 -m http.server 43191 --bind 0.0.0.0
 
 ## What’s in this draft
 
-- Home with featured pieces, collections, and the fit story
+- Home with featured pieces, collections, and how the clothes sit
 - Shop with collection filters
-- Product pages (size, color, notify-me)
+- Product pages (human sizes, color, notify-me)
 - About, contact / waitlist, privacy
 - Twelve intended SKUs in `js/site-config.js`
 

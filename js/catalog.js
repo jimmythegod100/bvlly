@@ -152,7 +152,7 @@
           <h1>${product.name}</h1>
           <p class="price">${money(product.price)}</p>
           <p>${product.description}</p>
-          <p class="product-collection">Size (miniature exotic)</p>
+          <p class="product-collection">Size</p>
           <div class="size-row">${sizes}</div>
           <p class="product-collection">Color</p>
           <div class="color-row">${colors}</div>

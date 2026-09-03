@@ -10,8 +10,8 @@ Kit: **HTML business starter**, adapted into a clothing catalog.
 |-------|--------|
 | **Business name** | BVLLY (said “Bully”) |
 | **Short name** | BVLLY |
-| **Tagline** | Apparel for miniature exotic bulldogs. |
-| **What they do** | Clothing brand for miniature exotic / compact bully frames — hoodies, tees, outerwear, accessories. Chest-first fit, not costume apparel. |
+| **Tagline** | Streetwear marked by the miniature exotic bulldog. |
+| **What they do** | Human clothing brand — hoodies, tees, outerwear, accessories. The miniature exotic bulldog is the mark / muse, not who the clothes are for. |
 | **Years in business / credibility** | Draft / first drop. |
 | **Service area** | Ships from the Central Valley, CA (online). |
 

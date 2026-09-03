@@ -140,7 +140,7 @@
           <li><a href="privacy.html">Privacy</a></li>
           ${ig}
         </ul>
-        <p class="footer-copy">© ${year} ${brand.name}. Clothes for miniature exotic bulldogs. All rights reserved.</p>
+        <p class="footer-copy">© ${year} ${brand.name}. Human streetwear. All rights reserved.</p>
       </div>`;
   }
 
@@ -172,7 +172,7 @@
     const el = document.querySelector('[data-about-content]');
     if (!el || !cfg.about) return;
     const media = window.BVLLY?.mediaSlot({
-      name: 'On the dog',
+      name: 'Lookbook',
       kicker: 'Brand',
       image: cfg.about.image
     }, 'about-media');
