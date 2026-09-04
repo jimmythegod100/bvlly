@@ -8,12 +8,12 @@ Kit: **HTML business starter**, adapted into a clothing catalog.
 
 | Field | Answer |
 |-------|--------|
-| **Business name** | BVLLY (said “Bully”) |
+| **Business name** | BVLLY |
 | **Short name** | BVLLY |
-| **Tagline** | Never mind the dog. Beware the owner. |
-| **What they do** | Human streetwear — gothic Beware prints and embroidered exotic bulldog marks. Oversized heavyweight hoodies, tees, cap. |
+| **Tagline** | Streetwear drawn from the exotic bully. |
+| **What they do** | Clothing brand — oversized hoodies, tees, cap. Narrative and essence from the exotic bully. Gothic Beware prints and embroidered marks. |
 | **Years in business / credibility** | Draft / first drop. |
-| **Service area** | Ships from the Central Valley, CA (online). |
+| **Service area** | Online. |
 
 ---
 

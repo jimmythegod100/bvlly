@@ -1,6 +1,6 @@
 # BVLLY
 
-Static catalog site for **BVLLY** (said “Bully”) — human streetwear. The miniature exotic bulldog is the bloodline, not the customer.
+Static catalog site for **BVLLY** — a clothing label whose stance comes from the exotic bully.
 
 Two languages in the drop: gothic **Beware** prints (silver on black) and the quiet embroidered **Mark**. This draft uses your product photos plus studio mockups of the same pieces.
 
@@ -22,9 +22,9 @@ python3 -m http.server 43191 --bind 0.0.0.0
 
 - Home with featured pieces, collections, and how the clothes sit
 - Shop with collection filters
-- Product pages (human sizes, color, notify-me)
+- Product pages (size, color, notify-me)
 - About, contact / waitlist, privacy
-- Twelve intended SKUs in `js/site-config.js`
+- Six SKUs in `js/site-config.js`
 
 ## Adding apparel photos later
 

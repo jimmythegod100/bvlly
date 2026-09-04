@@ -1,23 +1,23 @@
 /**
  * Site configuration — BVLLY
- * Human streetwear. Two languages: gothic Beware print + embroidered mark.
+ * Clothing brand. Essence from the exotic bully: compact, stubborn, unhurried.
  */
 window.SITE_CONFIG = {
   brand: {
     name: 'BVLLY',
     shortName: 'BVLLY',
     logoText: 'B V L L Y',
-    tagline: 'Never mind the dog. Beware the owner.',
+    tagline: 'Streetwear drawn from the exotic bully.',
     email: 'hello@bvlly.com',
     phone: '',
-    address: 'Online — ships from the Central Valley, CA',
+    address: 'Online',
     siteUrl: '',
     instagram: ''
   },
   hero: {
-    kicker: 'Said Bully',
-    headline: 'Never mind the dog.',
-    subhead: 'Beware the owner. Oversized heavyweight pieces in two languages — distressed gothic print, and a small embroidered exotic bulldog on the chest.',
+    kicker: '',
+    headline: 'Built from the breed.',
+    subhead: 'Oversized heavyweight streetwear. The exotic bully — compact, stubborn, unhurried — is the stance behind the cut, the gothic print, and the small embroidered mark.',
     image: 'images/products/beware-hood-front.png',
     fit: 'contain',
     ctaPrimary: { label: 'Shop the drop', href: 'shop.html' },
@@ -25,11 +25,11 @@ window.SITE_CONFIG = {
   },
   about: {
     headline: 'Two ways to wear it.',
-    intro: 'BVLLY — said “Bully” — is a human streetwear label. The miniature exotic bulldog is the bloodline, not the customer. You wear the clothes.',
+    intro: 'BVLLY is a clothing label. The line takes its essence from the exotic bully: short, thick, unbothered. That stance shows up in the oversized cut, the silver gothic type, and a small embroidered mark.',
     body: [
       'The Beware line is loud on purpose: Old English type, metallic silver on black, “Bully BEWARE!” on the chest and “Never-mind the dog, beware the owner” on the back.',
       'The Mark line is the other temperature: cream and ink blanks, left-chest embroidery of an exotic bulldog, no slogan. Same stance. Quieter.',
-      'Everything is cut oversized — drop shoulder, heavy cotton, nothing painted on. This catalog uses the real pieces plus studio mockups of the same drop. Checkout is not live yet; join the list if you want a size.'
+      'Everything is cut oversized — drop shoulder, heavy cotton. This catalog uses the real pieces plus studio mockups of the same drop. Checkout is not live yet; join the list if you want a size.'
     ],
     image: 'images/lookbook/mark-tee-lifestyle.png',
     fit: 'cover'
@@ -146,7 +146,7 @@ window.SITE_CONFIG = {
     hours: 'Drop inquiries answered within two business days.'
   },
   seo: {
-    description: 'BVLLY — never mind the dog, beware the owner. Human streetwear: gothic Beware prints and embroidered exotic bulldog marks.',
+    description: 'BVLLY — clothing drawn from the exotic bully. Oversized streetwear, gothic Beware prints, and embroidered marks.',
     ogImage: 'images/products/beware-hood-front.png'
   }
 };

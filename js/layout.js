@@ -139,7 +139,7 @@
           <li><a href="privacy.html">Privacy</a></li>
           ${ig}
         </ul>
-        <p class="footer-copy">© ${year} ${brand.name}. Never mind the dog. Beware the owner.</p>
+        <p class="footer-copy">© ${year} ${brand.name}.</p>
       </div>`;
   }
 

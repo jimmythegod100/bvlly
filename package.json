@@ -1,7 +1,7 @@
 {
   "name": "bvlly",
   "private": true,
-  "description": "BVLLY — human streetwear marked by the miniature exotic bulldog",
+  "description": "BVLLY — clothing drawn from the exotic bully",
   "scripts": {
     "dev": "python3 -m http.server 43191 --bind 0.0.0.0",
     "start": "python3 -m http.server 43191 --bind 0.0.0.0"
