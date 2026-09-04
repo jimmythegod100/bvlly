@@ -1,6 +1,5 @@
 /**
- * Catalog helpers — product grid, collections, product page, media slots.
- * Photos are optional. Missing files fall back to a labeled placeholder.
+ * Catalog helpers — product grid, galleries, media slots.
  */
 (function () {
   const cfg = window.SITE_CONFIG;
@@ -18,11 +17,17 @@
     return `$${Number(n).toFixed(0)}`;
   }
 
-  function mediaSlot(item, extraClass) {
+  function gallery(item) {
+    if (item.images && item.images.length) return item.images;
+    return item.image ? [item.image] : [];
+  }
+
+  function mediaSlot(item, extraClass, srcOverride) {
     const name = item.name || '';
     const kicker = item.kicker || collectionName(item.collection || '') || 'BVLLY';
-    const src = item.image || '';
-    const cls = `media-slot ${extraClass || ''}`.trim();
+    const src = srcOverride || item.image || '';
+    const studio = (item.fit || '') === 'contain' ? ' is-studio' : '';
+    const cls = `media-slot ${extraClass || ''}${studio}`.trim();
     const img = src
       ? `<img src="${src}" alt="${name}" width="800" height="1000" loading="lazy" decoding="async" data-try-photo>`
       : '';
@@ -46,6 +51,7 @@
       };
       img.addEventListener('error', mark);
       img.addEventListener('load', () => slot?.classList.add('has-photo'));
+      if (img.complete && img.naturalWidth) slot?.classList.add('has-photo');
     });
   }
 
@@ -58,7 +64,7 @@
         <div class="product-meta">
           <span class="product-collection">${collectionName(p.collection)}</span>
           <h3>${p.name}</h3>
-          <span class="price">${money(p.price)} · <span class="badge">Coming soon</span></span>
+          <span class="price">${money(p.price)}</span>
         </div>
       </a>`;
   }
@@ -66,7 +72,7 @@
   function fillFeatured() {
     const el = document.querySelector('[data-featured-products]');
     if (!el || !cfg.products) return;
-    const list = cfg.products.filter((p) => p.featured).slice(0, 6);
+    const list = cfg.products.filter((p) => p.featured);
     el.innerHTML = list.map(productCard).join('');
     bindPhotoSlots(el);
   }
@@ -143,10 +149,20 @@
     document.title = `${product.name} — ${cfg.brand.name}`;
     const sizes = (product.sizes || []).map((s) => `<span class="size-chip">${s}</span>`).join('');
     const colors = (product.colors || []).map((c) => `<span class="size-chip">${c}</span>`).join('');
+    const shots = gallery(product);
+    const thumbs = shots.length > 1
+      ? `<div class="thumbs" data-thumbs>${shots.map((src, i) => `
+          <button type="button" class="thumb ${i === 0 ? 'is-active' : ''}" data-src="${src}" aria-label="Photo ${i + 1}">
+            <img src="${src}" alt="">
+          </button>`).join('')}</div>`
+      : '';
 
     el.innerHTML = `
       <div class="product-layout">
-        ${mediaSlot(product, 'product-hero')}
+        <div class="product-gallery">
+          ${mediaSlot(product, 'product-hero', shots[0])}
+          ${thumbs}
+        </div>
         <div class="product-copy">
           <p class="product-collection">${collectionName(product.collection)}</p>
           <h1>${product.name}</h1>
@@ -156,7 +172,7 @@
           <div class="size-row">${sizes}</div>
           <p class="product-collection">Color</p>
           <div class="color-row">${colors}</div>
-          <p><span class="badge">Photo pending</span> Checkout is not live on this draft.</p>
+          <p>Checkout is not live on this draft — request a size below.</p>
           <p style="margin-top:1.25rem;">
             <a class="btn btn-primary" href="contact.html?piece=${encodeURIComponent(product.id)}">Notify me</a>
             <a class="btn btn-outline" href="shop.html">All pieces</a>
@@ -164,6 +180,18 @@
         </div>
       </div>`;
     bindPhotoSlots(el);
+
+    const mainImg = el.querySelector('.product-hero img');
+    el.querySelectorAll('[data-thumbs] .thumb').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        el.querySelectorAll('.thumb').forEach((t) => t.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        if (mainImg) {
+          mainImg.src = btn.dataset.src;
+          mainImg.closest('.media-slot')?.classList.add('has-photo');
+        }
+      });
+    });
   }
 
   function prefillContactPiece() {

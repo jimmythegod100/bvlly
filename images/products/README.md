@@ -1,26 +1,18 @@
-# Add apparel photos here
+# Catalog photos
 
-Drop product photography into this folder using the SKU file names from `js/site-config.js`. Human garments — on-body or still life.
+Real drop shots plus studio mockups of the same garments.
 
 | File | Piece |
 |------|--------|
-| `box-hood.jpg` | Box Hood |
-| `muscle-tee.jpg` | Muscle Tee |
-| `mark-tee.jpg` | Mark Tee |
-| `sunday-sweat.jpg` | Sunday Sweat |
-| `practice-tank.jpg` | Practice Tank |
-| `track-short.jpg` | Track Short |
-| `crop-bomber.jpg` | Crop Bomber |
-| `quilted-vest.jpg` | Quilted Vest |
-| `stadium-jacket.jpg` | Stadium Jacket |
-| `logo-cap.jpg` | Logo Cap |
-| `mark-tote.jpg` | Mark Tote |
-| `knit-beanie.jpg` | Knit Beanie |
+| `beware-hood-front.png` | Beware Hood — front (from your flat) |
+| `beware-hood-back.png` | Beware Hood — back (from your flat) |
+| `beware-hood-front-mock.png` | Beware Hood — studio front mockup |
+| `beware-hood-back-mock.png` | Beware Hood — studio back mockup |
+| `beware-tee-mock.png` | Beware Tee — studio mockup |
+| `mark-tee-embroidery.png` | Mark Tee — embroidery close-up |
+| `mark-tee-bone-mock.png` | Mark Tee Bone — studio mockup |
+| `mark-tee-ink-mock.png` | Mark Tee Ink — studio mockup |
+| `mark-hood-bone-mock.png` | Mark Hood Bone — studio mockup |
+| `mark-cap-mock.png` | Mark Cap — studio mockup |
 
-Use JPG or PNG. Portrait 4:5 is the catalog crop. Optional extras:
-
-- `images/hero.jpg` — set `hero.image` in `js/site-config.js`
-- `images/about.jpg` — set `about.image` in `js/site-config.js`
-- `images/og.jpg` — set `seo.ogImage`
-
-Until a file exists, the site shows a labeled “Photo coming” slot so the catalog still reads as a clothing brand.
+Lookbook: `images/lookbook/mark-tee-lifestyle.png` (on-body cream tee).

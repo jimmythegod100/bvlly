@@ -1,8 +1,8 @@
 # BVLLY
 
-Static catalog site for **BVLLY** (said “Bully”) — a **human** streetwear label. The miniature exotic bulldog is the brand mark, not the customer.
+Static catalog site for **BVLLY** (said “Bully”) — human streetwear. The miniature exotic bulldog is the bloodline, not the customer.
 
-This draft follows the HTML client kit used for Valley Notary Services and Vincere Media Works: one `js/site-config.js`, brand tokens in `css/brand.css`, GitHub Pages-ready static files. Checkout is not live. Product photos are labeled placeholders until apparel media is dropped in.
+Two languages in the drop: gothic **Beware** prints (silver on black) and the quiet embroidered **Mark**. This draft uses your product photos plus studio mockups of the same pieces.
 
 ## Preview locally
 

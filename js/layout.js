@@ -100,7 +100,6 @@
     if (!header) return;
 
     header.innerHTML = `
-      <div class="draft-bar">Draft catalog — product photos land next</div>
       <div class="container header-inner">
         <a class="logo" href="index.html">${logoLabel()}</a>
         <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>☰</button>
@@ -140,7 +139,7 @@
           <li><a href="privacy.html">Privacy</a></li>
           ${ig}
         </ul>
-        <p class="footer-copy">© ${year} ${brand.name}. Human streetwear. All rights reserved.</p>
+        <p class="footer-copy">© ${year} ${brand.name}. Never mind the dog. Beware the owner.</p>
       </div>`;
   }
 
@@ -149,8 +148,9 @@
     if (!el || !cfg.hero) return;
     const media = window.BVLLY?.mediaSlot({
       name: brand.name,
-      kicker: 'Lookbook',
-      image: cfg.hero.image
+      kicker: 'Beware Hood',
+      image: cfg.hero.image,
+      fit: cfg.hero.fit || 'contain'
     }, 'hero-media');
 
     el.innerHTML = `
@@ -172,9 +172,10 @@
     const el = document.querySelector('[data-about-content]');
     if (!el || !cfg.about) return;
     const media = window.BVLLY?.mediaSlot({
-      name: 'Lookbook',
-      kicker: 'Brand',
-      image: cfg.about.image
+      name: 'Mark Tee',
+      kicker: 'The Mark',
+      image: cfg.about.image,
+      fit: cfg.about.fit || 'cover'
     }, 'about-media');
 
     el.innerHTML = `
