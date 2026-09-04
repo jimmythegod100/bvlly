@@ -122,7 +122,7 @@
             <h3>${c.name}</h3>
             <p>${c.tagline}</p>
           </div>
-          <span class="product-collection">${count} pieces · 4 colors</span>
+          <span class="product-collection">${count} pieces · 5 colors</span>
         </a>`;
     }).join('');
   }
@@ -328,7 +328,7 @@
 
     const colorSelect = document.querySelector('[name="color"]');
     if (colorSelect) {
-      const colors = ['', 'Beige', 'Electric Blue', 'Black', 'Army Green'];
+      const colors = ['', 'Beige', 'Dust Blue', 'Pink', 'Black', 'Army Green'];
       colorSelect.innerHTML = colors.map((c) => {
         const label = c || 'Not sure yet';
         const selected = c && c.toLowerCase() === color.toLowerCase() ? 'selected' : '';

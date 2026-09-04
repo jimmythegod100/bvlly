@@ -2,7 +2,7 @@
 
 On-body lookbook shots. Shop cards, product pages, and the hero use these — never empty-garment studio mocks as the preview.
 
-Four colorways per piece: **beige**, **electric blue**, **black**, **army green**.
+Five colorways per piece: **beige**, **dust blue**, **pink**, **black**, **army green**.
 
 | File pattern | Piece |
 |--------------|--------|

@@ -2,7 +2,7 @@
 
 Static catalog for **BVLLY** — a clothing label whose stance comes from the exotic bully.
 
-Two languages in the drop: gothic **Beware** prints and the quiet embroidered **Mark**. Every piece has four colorways — beige, electric blue, black, army green — photographed on a person.
+Two languages in the drop: gothic **Beware** prints and the quiet embroidered **Mark**. Every piece has five colorways — beige, dust blue, pink, black, army green — photographed on a person.
 
 ## Live site (GitHub Pages)
 
@@ -37,7 +37,7 @@ python3 dev-server.py
 - Shop with collection filters
 - Product pages (size selection, color, notify-me)
 - About, contact / waitlist, privacy
-- Five pieces in `js/site-config.js`, each in four colorways
+- Five pieces in `js/site-config.js`, each in five colorways
 
 Checkout is not live. Waitlist uses FormSubmit to `hello@bvlly.com` (placeholder inbox).
 

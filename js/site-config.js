@@ -8,7 +8,8 @@
 (function () {
   const COLORWAYS = [
     { name: 'Beige', slug: 'beige', hex: '#d4c4a8' },
-    { name: 'Electric Blue', slug: 'electric-blue', hex: '#1560ff' },
+    { name: 'Dust Blue', slug: 'electric-blue', hex: '#9bb1c9' },
+    { name: 'Pink', slug: 'pink', hex: '#e5b3c5' },
     { name: 'Black', slug: 'black', hex: '#111111' },
     { name: 'Army Green', slug: 'army-green', hex: '#4a5d23' }
   ];
@@ -51,7 +52,7 @@
       body: [
         'The Beware line is loud on purpose: Old English type on the chest — “Bully BEWARE!” — and “Never-mind the dog, beware the owner” on the back of the hood.',
         'The Mark line is the other temperature: a small embroidered exotic bulldog on the left chest, no slogan. Same stance. Quieter.',
-        'Every piece runs in four colorways — beige, electric blue, black, and army green — cut oversized. Checkout is not live yet; join the list if you want a size.'
+        'Every piece runs in five colorways — beige, dust blue, pink, black, and army green — cut oversized. Checkout is not live yet; join the list if you want a size.'
       ],
       image: worn('mark-tee', 'beige'),
       fit: 'cover'
@@ -60,17 +61,17 @@
       {
         id: 'graphic',
         name: 'Beware',
-        tagline: 'Gothic print. Four colorways.'
+        tagline: 'Gothic print. Five colorways.'
       },
       {
         id: 'mark',
         name: 'The Mark',
-        tagline: 'Small embroidered bully. Four colorways.'
+        tagline: 'Small embroidered bully. Five colorways.'
       },
       {
         id: 'accessories',
         name: 'Accessories',
-        tagline: 'The mark, off the chest. Four colorways.'
+        tagline: 'The mark, off the chest. Five colorways.'
       }
     ],
     products: [
@@ -81,7 +82,7 @@
         price: 128,
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
         colors: wornColors('beware-hood'),
-        description: 'Oversized heavyweight pullover. Front: “Bully BEWARE!” in distressed blackletter. Back: “Never-mind the dog, beware the owner.” Drop shoulder, thick hood, rib that holds. Beige, electric blue, black, army green.',
+        description: 'Oversized heavyweight pullover. Front: “Bully BEWARE!” in distressed blackletter. Back: “Never-mind the dog, beware the owner.” Drop shoulder, thick hood, rib that holds. Beige, dust blue, pink, black, army green.',
         image: worn('beware-hood', 'black'),
         fit: 'cover',
         featured: true
@@ -93,7 +94,7 @@
         price: 54,
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
         colors: wornColors('beware-tee'),
-        description: 'Heavyweight oversized tee with the same chest print as the hood — “Bully BEWARE!” in distressed gothic type. Beige, electric blue, black, army green.',
+        description: 'Heavyweight oversized tee with the same chest print as the hood — “Bully BEWARE!” in distressed gothic type. Beige, dust blue, pink, black, army green.',
         image: worn('beware-tee', 'electric-blue'),
         fit: 'cover',
         featured: true
@@ -105,7 +106,7 @@
         price: 54,
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
         colors: wornColors('mark-tee'),
-        description: 'Heavyweight crew. Small embroidered exotic bulldog on the left chest. No slogan. The quiet half of the drop. Beige, electric blue, black, army green.',
+        description: 'Heavyweight crew. Small embroidered exotic bulldog on the left chest. No slogan. The quiet half of the drop. Beige, dust blue, pink, black, army green.',
         image: worn('mark-tee', 'beige'),
         fit: 'cover',
         featured: true
@@ -117,7 +118,7 @@
         price: 118,
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
         colors: wornColors('mark-hood'),
-        description: 'Oversized hoodie. No chest slogan — just the embroidered mark on the left. Beige, electric blue, and black are long sleeve; army green is short sleeve.',
+        description: 'Oversized hoodie. No chest slogan — just the embroidered mark on the left. Beige, dust blue, pink, and black are long sleeve; army green is short sleeve.',
         image: worn('mark-hood', 'army-green'),
         fit: 'cover',
         featured: true
@@ -129,7 +130,7 @@
         price: 38,
         sizes: ['One size'],
         colors: wornColors('mark-cap'),
-        description: 'Structured cap. Embroidered exotic bulldog on the front panel. Beige, electric blue, black, army green.',
+        description: 'Structured cap. Embroidered exotic bulldog on the front panel. Beige, dust blue, pink, black, army green.',
         image: worn('mark-cap', 'black'),
         fit: 'cover',
         featured: false
@@ -146,7 +147,7 @@
       hours: 'Drop inquiries answered within two business days.'
     },
     seo: {
-      description: 'BVLLY — clothing drawn from the exotic bully. Oversized streetwear in beige, electric blue, black, and army green. Gothic Beware prints and embroidered marks.',
+      description: 'BVLLY — clothing drawn from the exotic bully. Oversized streetwear in beige, dust blue, pink, black, and army green. Gothic Beware prints and embroidered marks.',
       ogImage: 'images/og.jpg'
     }
   };

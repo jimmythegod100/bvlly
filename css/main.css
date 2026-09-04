@@ -418,7 +418,7 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
 
 .thumbs {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 0.4rem;
   margin-top: 0.5rem;
 }
@@ -473,10 +473,16 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
   border-color: #c4b496;
 }
 
-.color-chip[data-tone="Electric Blue"] {
-  background: #1560ff;
-  color: #fff;
-  border-color: #3d7aff;
+.color-chip[data-tone="Dust Blue"] {
+  background: #9bb1c9;
+  color: #111;
+  border-color: #7f96ae;
+}
+
+.color-chip[data-tone="Pink"] {
+  background: #e5b3c5;
+  color: #111;
+  border-color: #d49aaf;
 }
 
 .color-chip[data-tone="Black"] {
