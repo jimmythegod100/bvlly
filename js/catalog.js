@@ -122,7 +122,7 @@
             <h3>${c.name}</h3>
             <p>${c.tagline}</p>
           </div>
-          <span class="product-collection">${count} pieces · 5 colors</span>
+          <span class="product-collection">${count} pieces</span>
         </a>`;
     }).join('');
   }

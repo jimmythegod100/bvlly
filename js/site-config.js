@@ -100,6 +100,20 @@
         featured: true
       },
       {
+        id: 'beware-leggings',
+        name: 'Beware Leggings',
+        collection: 'graphic',
+        price: 68,
+        sizes: ['XS', 'S', 'M', 'L', 'XL'],
+        colors: [
+          { name: 'Black', slug: 'black', hex: '#111111', image: worn('beware-leggings', 'black') }
+        ],
+        description: 'High-waist full-length. The white heart is gone — BEWARE sits on the back waistband in the same gothic lettering as the hood.',
+        image: worn('beware-leggings', 'black'),
+        fit: 'cover',
+        featured: true
+      },
+      {
         id: 'mark-tee',
         name: 'Mark Tee',
         collection: 'mark',
