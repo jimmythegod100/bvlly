@@ -47,7 +47,7 @@ What should the website **make visitors do**?
 | Home | Yes | Hero, featured, collections, fit notes |
 | Shop / catalog | Yes | Filters by collection |
 | Product | Yes | Size/color, notify me |
-| Collections | Yes | Four lanes |
+| Collections | Yes | Beware, The Mark, Accessories |
 | About | Yes | Brand story |
 | Contact | Yes | Waitlist form |
 | Privacy | Yes | FormSubmit note |
@@ -58,11 +58,13 @@ What should the website **make visitors do**?
 
 | Field | Answer |
 |-------|--------|
-| **Primary color** | Champagne gold `#d4af7a` |
-| **Ground** | Near-black `#0c0b0a` |
-| **Accent** | Oxblood `#8f3b32` |
+| **Ground** | Near-black `#070707` |
+| **Type / chrome** | Silver `#cfc6b8` |
+| **Photo well** | Cream `#ece8e1` |
+| **Accent** | Tan `#b8956a` |
 | **Logo** | Letterspaced **B V L L Y** |
-| **Photos** | Pending — apparel media to be supplied |
+| **Display type** | UnifrakturMaguntia (gothic) |
+| **Photos** | Real Beware Hood flats + Mark Tee lifestyle, plus studio mockups |
 
 ---
 
@@ -71,8 +73,7 @@ What should the website **make visitors do**?
 | Item | Client provides? | Due date |
 |------|-------------------|----------|
 | Logo | Later | After this draft |
-| Hero / lookbook | Yes | After this draft |
-| Product photos | Yes | After this draft |
+| More lookbook | Yes | After this draft |
 | Final prices / colorways | Confirm against this draft | After this draft |
 
 ---
@@ -86,4 +87,4 @@ What should the website **make visitors do**?
 | **Contact form email** | hello@bvlly.com until replaced |
 | **Kit chosen** | HTML |
 
-**Notes:** Rough draft. No live checkout. Product photos are empty slots on purpose.
+**Notes:** Rough draft. No live checkout. Waitlist via FormSubmit.

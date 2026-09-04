@@ -1,6 +1,9 @@
 /**
  * Site configuration — BVLLY
  * Clothing brand. Essence from the exotic bully: compact, stubborn, unhurried.
+ *
+ * Set brand.siteUrl to the live origin (no trailing slash) before sharing
+ * so Open Graph, canonical, sitemap, and the waitlist redirect resolve.
  */
 window.SITE_CONFIG = {
   brand: {
@@ -18,7 +21,7 @@ window.SITE_CONFIG = {
     kicker: '',
     headline: 'Built from the breed.',
     subhead: 'Oversized heavyweight streetwear. The exotic bully — compact, stubborn, unhurried — is the stance behind the cut, the gothic print, and the small embroidered mark.',
-    image: 'images/products/beware-hood-front.png',
+    image: 'images/products/beware-hood-front.jpg',
     fit: 'contain',
     ctaPrimary: { label: 'Shop the drop', href: 'shop.html' },
     ctaSecondary: { label: 'The mark', href: 'about.html' }
@@ -31,7 +34,7 @@ window.SITE_CONFIG = {
       'The Mark line is the other temperature: cream and ink blanks, left-chest embroidery of an exotic bulldog, no slogan. Same stance. Quieter.',
       'Everything is cut oversized — drop shoulder, heavy cotton. This catalog uses the real pieces plus studio mockups of the same drop. Checkout is not live yet; join the list if you want a size.'
     ],
-    image: 'images/lookbook/mark-tee-lifestyle.png',
+    image: 'images/lookbook/mark-tee-lifestyle.jpg',
     fit: 'cover'
   },
   collections: [
@@ -60,12 +63,12 @@ window.SITE_CONFIG = {
       sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       colors: ['Ink'],
       description: 'Oversized heavyweight pullover. Front: “Bully BEWARE!” in distressed silver blackletter. Back: “Never-mind the dog, beware the owner.” Drop shoulder, thick hood, rib that holds.',
-      image: 'images/products/beware-hood-front.png',
+      image: 'images/products/beware-hood-front.jpg',
       images: [
-        'images/products/beware-hood-front.png',
-        'images/products/beware-hood-back.png',
-        'images/products/beware-hood-front-mock.png',
-        'images/products/beware-hood-back-mock.png'
+        'images/products/beware-hood-front.jpg',
+        'images/products/beware-hood-back.jpg',
+        'images/products/beware-hood-front-mock.jpg',
+        'images/products/beware-hood-back-mock.jpg'
       ],
       fit: 'contain',
       featured: true
@@ -78,8 +81,8 @@ window.SITE_CONFIG = {
       sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       colors: ['Ink'],
       description: 'Heavyweight black tee with the same chest print as the hood — “Bully BEWARE!” in distressed silver gothic type. Studio mockup of the graphic line.',
-      image: 'images/products/beware-tee-mock.png',
-      images: ['images/products/beware-tee-mock.png'],
+      image: 'images/products/beware-tee-mock.jpg',
+      images: ['images/products/beware-tee-mock.jpg'],
       fit: 'contain',
       featured: true
     },
@@ -91,11 +94,11 @@ window.SITE_CONFIG = {
       sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       colors: ['Bone'],
       description: 'Cream heavyweight crew. Small embroidered exotic bulldog on the left chest. No slogan. The quiet half of the drop.',
-      image: 'images/lookbook/mark-tee-lifestyle.png',
+      image: 'images/lookbook/mark-tee-lifestyle.jpg',
       images: [
-        'images/lookbook/mark-tee-lifestyle.png',
-        'images/products/mark-tee-embroidery.png',
-        'images/products/mark-tee-bone-mock.png'
+        'images/lookbook/mark-tee-lifestyle.jpg',
+        'images/products/mark-tee-embroidery.jpg',
+        'images/products/mark-tee-bone-mock.jpg'
       ],
       fit: 'cover',
       featured: true
@@ -108,8 +111,8 @@ window.SITE_CONFIG = {
       sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       colors: ['Ink'],
       description: 'Black heavyweight crew with the same left-chest bully embroidery in tan and dark thread. Studio mockup of the Mark line.',
-      image: 'images/products/mark-tee-ink-mock.png',
-      images: ['images/products/mark-tee-ink-mock.png'],
+      image: 'images/products/mark-tee-ink-mock.jpg',
+      images: ['images/products/mark-tee-ink-mock.jpg'],
       fit: 'contain',
       featured: true
     },
@@ -121,8 +124,8 @@ window.SITE_CONFIG = {
       sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       colors: ['Bone'],
       description: 'Oversized cream hoodie. No chest slogan — just the embroidered mark on the left. Studio mockup from the same embroidery.',
-      image: 'images/products/mark-hood-bone-mock.png',
-      images: ['images/products/mark-hood-bone-mock.png'],
+      image: 'images/products/mark-hood-bone-mock.jpg',
+      images: ['images/products/mark-hood-bone-mock.jpg'],
       fit: 'contain',
       featured: true
     },
@@ -134,8 +137,8 @@ window.SITE_CONFIG = {
       sizes: ['One size'],
       colors: ['Ink'],
       description: 'Structured black cap. Embroidered exotic bulldog on the front panel. Studio mockup of the mark off the chest.',
-      image: 'images/products/mark-cap-mock.png',
-      images: ['images/products/mark-cap-mock.png'],
+      image: 'images/products/mark-cap-mock.jpg',
+      images: ['images/products/mark-cap-mock.jpg'],
       fit: 'contain',
       featured: false
     }
@@ -147,6 +150,14 @@ window.SITE_CONFIG = {
   },
   seo: {
     description: 'BVLLY — clothing drawn from the exotic bully. Oversized streetwear, gothic Beware prints, and embroidered marks.',
-    ogImage: 'images/products/beware-hood-front.png'
+    ogImage: 'images/products/beware-hood-front.jpg'
   }
+};
+
+window.absoluteUrl = function (path) {
+  if (!path) return window.SITE_CONFIG.brand.siteUrl || '';
+  if (/^https?:\/\//i.test(path)) return path;
+  const base = (window.SITE_CONFIG.brand.siteUrl || '').replace(/\/$/, '');
+  const rel = String(path).replace(/^\//, '');
+  return base ? `${base}/${rel}` : rel;
 };

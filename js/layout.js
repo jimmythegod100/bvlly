@@ -27,15 +27,31 @@
     el.setAttribute('content', value);
   }
 
-  function upsertLink(rel, href) {
+  function upsertLink(rel, href, extra) {
     if (!href) return;
-    let el = document.querySelector(`link[rel="${rel}"]`);
+    let el = extra?.as
+      ? document.querySelector(`link[rel="${rel}"][as="${extra.as}"]`)
+      : document.querySelector(`link[rel="${rel}"]`);
     if (!el) {
       el = document.createElement('link');
       el.rel = rel;
       document.head.appendChild(el);
     }
     el.href = href;
+    if (extra) Object.entries(extra).forEach(([k, v]) => el.setAttribute(k, v));
+  }
+
+  function pageHref() {
+    if (page === 'home' || page === '404') return 'index.html';
+    if (page === 'product') {
+      const id = new URLSearchParams(location.search).get('id');
+      return id ? `product.html?id=${encodeURIComponent(id)}` : 'product.html';
+    }
+    if (page === 'shop') {
+      const col = new URLSearchParams(location.search).get('collection');
+      return col ? `shop.html?collection=${encodeURIComponent(col)}` : 'shop.html';
+    }
+    return `${page}.html`;
   }
 
   function setMeta() {
@@ -44,21 +60,18 @@
     document.title = titleBase;
 
     upsertMeta('name', 'description', desc);
-    upsertMeta('property', 'og:type', 'website');
+    upsertMeta('name', 'theme-color', '#070707');
+    upsertMeta('property', 'og:type', page === 'product' ? 'product' : 'website');
     upsertMeta('property', 'og:title', titleBase);
     upsertMeta('property', 'og:description', desc);
-    if (brand.siteUrl) upsertMeta('property', 'og:url', brand.siteUrl);
-    if (cfg.seo?.ogImage) upsertMeta('property', 'og:image', cfg.seo.ogImage);
+    if (brand.siteUrl) upsertMeta('property', 'og:url', window.absoluteUrl(pageHref()));
+    if (cfg.seo?.ogImage) upsertMeta('property', 'og:image', window.absoluteUrl(cfg.seo.ogImage));
     upsertMeta('name', 'twitter:card', 'summary_large_image');
     upsertMeta('name', 'twitter:title', titleBase);
     upsertMeta('name', 'twitter:description', desc);
+    if (cfg.seo?.ogImage) upsertMeta('name', 'twitter:image', window.absoluteUrl(cfg.seo.ogImage));
 
-    if (brand.siteUrl) {
-      const base = brand.siteUrl.replace(/\/$/, '');
-      const path = page === 'home' || page === '404' ? '/' : `/${page}.html`;
-      upsertLink('canonical', base + (path === '/' ? '/' : path));
-    }
-
+    if (brand.siteUrl) upsertLink('canonical', window.absoluteUrl(pageHref()));
     upsertLink('icon', 'favicon.svg');
 
     const existing = document.getElementById('site-jsonld');
@@ -130,7 +143,10 @@
       : '';
     footer.innerHTML = `
       <div class="container footer-inner">
-        <div class="footer-brand">${logoLabel()}</div>
+        <div>
+          <div class="footer-brand">${logoLabel()}</div>
+          <p class="footer-tagline">${brand.tagline}</p>
+        </div>
         <ul class="footer-links">
           <li><a href="shop.html">Shop</a></li>
           <li><a href="collections.html">Collections</a></li>
@@ -139,13 +155,16 @@
           <li><a href="privacy.html">Privacy</a></li>
           ${ig}
         </ul>
-        <p class="footer-copy">© ${year} ${brand.name}.</p>
+        <p class="footer-copy">© ${year} ${brand.name}. Draft catalog — checkout not live.</p>
       </div>`;
   }
 
   function fillHero() {
     const el = document.querySelector('[data-hero]');
     if (!el || !cfg.hero) return;
+    if (cfg.hero.image) {
+      upsertLink('preload', cfg.hero.image, { as: 'image' });
+    }
     const media = window.BVLLY?.mediaSlot({
       name: brand.name,
       kicker: 'Beware Hood',
@@ -210,8 +229,7 @@
       form.action = cfg.contact.formAction;
       const nextInput = form.querySelector('[name="_next"]');
       if (nextInput && brand.siteUrl) {
-        const base = brand.siteUrl.replace(/\/$/, '');
-        nextInput.value = `${base}/${cfg.contact.thanksPage}`;
+        nextInput.value = window.absoluteUrl(cfg.contact.thanksPage);
       } else if (nextInput) {
         nextInput.value = cfg.contact.thanksPage;
       }

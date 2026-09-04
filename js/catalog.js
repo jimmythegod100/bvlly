@@ -28,8 +28,9 @@
     const src = srcOverride || item.image || '';
     const studio = (item.fit || '') === 'contain' ? ' is-studio' : '';
     const cls = `media-slot ${extraClass || ''}${studio}`.trim();
+    const eager = (extraClass || '').includes('hero-media') || (extraClass || '').includes('product-hero');
     const img = src
-      ? `<img src="${src}" alt="${name}" width="800" height="1000" loading="lazy" decoding="async" data-try-photo>`
+      ? `<img src="${src}" alt="${name}" width="800" height="1000" ${eager ? 'fetchpriority="high" loading="eager"' : 'loading="lazy"'} decoding="async" data-try-photo>`
       : '';
     return `
       <div class="${cls}${src ? '' : ' is-empty'}">
@@ -147,8 +148,12 @@
     }
 
     document.title = `${product.name} — ${cfg.brand.name}`;
-    const sizes = (product.sizes || []).map((s) => `<span class="size-chip">${s}</span>`).join('');
-    const colors = (product.colors || []).map((c) => `<span class="size-chip">${c}</span>`).join('');
+    const sizes = (product.sizes || []).map((s, i) =>
+      `<button type="button" class="size-chip${i === 0 ? ' is-selected' : ''}" data-size="${s}" aria-pressed="${i === 0 ? 'true' : 'false'}">${s}</button>`
+    ).join('');
+    const colors = (product.colors || []).map((c) =>
+      `<span class="size-chip color-chip" data-tone="${c}">${c}</span>`
+    ).join('');
     const shots = gallery(product);
     const thumbs = shots.length > 1
       ? `<div class="thumbs" data-thumbs>${shots.map((src, i) => `
@@ -156,6 +161,8 @@
             <img src="${src}" alt="">
           </button>`).join('')}</div>`
       : '';
+
+    const notifyHref = `contact.html?piece=${encodeURIComponent(product.id)}&size=${encodeURIComponent(product.sizes?.[0] || '')}`;
 
     el.innerHTML = `
       <div class="product-layout">
@@ -169,12 +176,12 @@
           <p class="price">${money(product.price)}</p>
           <p>${product.description}</p>
           <p class="product-collection">Size</p>
-          <div class="size-row">${sizes}</div>
+          <div class="size-row" data-size-row>${sizes}</div>
           <p class="product-collection">Color</p>
           <div class="color-row">${colors}</div>
           <p>Checkout is not live on this draft — request a size below.</p>
           <p style="margin-top:1.25rem;">
-            <a class="btn btn-primary" href="contact.html?piece=${encodeURIComponent(product.id)}">Notify me</a>
+            <a class="btn btn-primary" data-notify-link href="${notifyHref}">Notify me</a>
             <a class="btn btn-outline" href="shop.html">All pieces</a>
           </p>
         </div>
@@ -192,14 +199,73 @@
         }
       });
     });
+
+    const notify = el.querySelector('[data-notify-link]');
+    el.querySelectorAll('[data-size-row] .size-chip').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        el.querySelectorAll('[data-size-row] .size-chip').forEach((chip) => {
+          chip.classList.remove('is-selected');
+          chip.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('is-selected');
+        btn.setAttribute('aria-pressed', 'true');
+        if (notify) {
+          notify.href = `contact.html?piece=${encodeURIComponent(product.id)}&size=${encodeURIComponent(btn.dataset.size || '')}`;
+        }
+      });
+    });
+
+    const ld = document.createElement('script');
+    ld.type = 'application/ld+json';
+    ld.id = 'product-jsonld';
+    ld.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: product.name,
+      description: product.description,
+      image: shots.map((src) => window.absoluteUrl(src)),
+      brand: { '@type': 'Brand', name: cfg.brand.name },
+      offers: {
+        '@type': 'Offer',
+        price: product.price,
+        priceCurrency: 'USD',
+        availability: 'https://schema.org/PreOrder',
+        url: window.absoluteUrl(`product.html?id=${encodeURIComponent(product.id)}`)
+      }
+    });
+    document.getElementById('product-jsonld')?.remove();
+    document.head.appendChild(ld);
   }
 
   function prefillContactPiece() {
     const select = document.querySelector('[name="piece"]');
     if (!select || !cfg.products) return;
-    const current = new URLSearchParams(window.location.search).get('piece') || '';
+    const params = new URLSearchParams(window.location.search);
+    const current = params.get('piece') || '';
+    const size = params.get('size') || '';
     select.innerHTML = `<option value="">Just saying hello</option>` +
       cfg.products.map((p) => `<option value="${p.name}" ${p.id === current ? 'selected' : ''}>${p.name}</option>`).join('');
+
+    const sizeSelect = document.querySelector('[name="size"]');
+    if (sizeSelect) {
+      const sizes = ['', 'S', 'M', 'L', 'XL', 'XXL', 'One size'];
+      sizeSelect.innerHTML = sizes.map((s) => {
+        const label = s || 'Not sure yet';
+        const selected = s && s === size ? 'selected' : '';
+        return `<option value="${s}" ${selected}>${label}</option>`;
+      }).join('');
+    }
+
+    const message = document.querySelector('[name="message"]');
+    if (message && !message.value && (current || size)) {
+      const piece = cfg.products.find((p) => p.id === current);
+      const parts = [];
+      if (piece) parts.push(`Interested in ${piece.name}.`);
+      if (size) parts.push(`Size ${size}.`);
+      message.placeholder = parts.length
+        ? `${parts.join(' ')} City and anything else we should know.`
+        : message.placeholder;
+    }
   }
 
   fillFeatured();

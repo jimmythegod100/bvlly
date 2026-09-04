@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: /sitemap.xml
+# Replace with the live origin once Pages (or a custom domain) is on.
+Sitemap: sitemap.xml
