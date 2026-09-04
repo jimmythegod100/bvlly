@@ -65,11 +65,17 @@
     upsertMeta('property', 'og:title', titleBase);
     upsertMeta('property', 'og:description', desc);
     if (brand.siteUrl) upsertMeta('property', 'og:url', window.absoluteUrl(pageHref()));
-    if (cfg.seo?.ogImage) upsertMeta('property', 'og:image', window.absoluteUrl(cfg.seo.ogImage));
+    if (cfg.seo?.ogImage) {
+      const og = window.absoluteUrl(cfg.seo.ogImage);
+      upsertMeta('property', 'og:image', og);
+      upsertMeta('property', 'og:image:width', '1200');
+      upsertMeta('property', 'og:image:height', '630');
+      upsertMeta('property', 'og:image:type', 'image/jpeg');
+      upsertMeta('name', 'twitter:image', og);
+    }
     upsertMeta('name', 'twitter:card', 'summary_large_image');
     upsertMeta('name', 'twitter:title', titleBase);
     upsertMeta('name', 'twitter:description', desc);
-    if (cfg.seo?.ogImage) upsertMeta('name', 'twitter:image', window.absoluteUrl(cfg.seo.ogImage));
 
     if (brand.siteUrl) upsertLink('canonical', window.absoluteUrl(pageHref()));
     upsertLink('icon', 'favicon.svg');

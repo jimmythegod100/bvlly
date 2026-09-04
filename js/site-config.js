@@ -147,7 +147,7 @@
     },
     seo: {
       description: 'BVLLY — clothing drawn from the exotic bully. Oversized streetwear in beige, electric blue, black, and army green. Gothic Beware prints and embroidered marks.',
-      ogImage: worn('beware-hood', 'black')
+      ogImage: 'images/og.jpg'
     }
   };
 })();
