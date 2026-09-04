@@ -117,7 +117,7 @@
         price: 118,
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
         colors: wornColors('mark-hood'),
-        description: 'Oversized hoodie. No chest slogan — just the embroidered mark on the left. Beige, electric blue, black, army green.',
+        description: 'Oversized hoodie. No chest slogan — just the embroidered mark on the left. Beige, electric blue, and black are long sleeve; army green is short sleeve.',
         image: worn('mark-hood', 'army-green'),
         fit: 'cover',
         featured: true
