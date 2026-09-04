@@ -64,7 +64,7 @@ What should the website **make visitors do**?
 | **Accent** | Tan `#b8956a` |
 | **Logo** | Letterspaced **B V L L Y** |
 | **Display type** | UnifrakturMaguntia (gothic) |
-| **Photos** | Real Beware Hood flats + Mark Tee lifestyle, plus studio mockups |
+| **Photos** | On-body lookbook in beige, electric blue, black, and army green |
 
 ---
 

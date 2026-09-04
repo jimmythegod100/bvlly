@@ -2,7 +2,7 @@
 
 Static catalog for **BVLLY** — a clothing label whose stance comes from the exotic bully.
 
-Two languages in the drop: gothic **Beware** prints (silver on black) and the quiet embroidered **Mark**. This draft uses product photos plus studio mockups of the same pieces.
+Two languages in the drop: gothic **Beware** prints and the quiet embroidered **Mark**. Every piece has four colorways — beige, electric blue, black, army green — photographed on a person.
 
 ## Preview locally
 

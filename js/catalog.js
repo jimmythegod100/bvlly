@@ -17,9 +17,32 @@
     return `$${Number(n).toFixed(0)}`;
   }
 
+  function colorways(item) {
+    const list = item.colors || [];
+    if (!list.length) {
+      return item.image ? [{ name: '', slug: '', hex: '', image: item.image }] : [];
+    }
+    if (typeof list[0] === 'string') {
+      return list.map((name) => ({
+        name,
+        slug: String(name).toLowerCase().replace(/\s+/g, '-'),
+        hex: '',
+        image: item.image
+      }));
+    }
+    return list;
+  }
+
   function gallery(item) {
+    const worn = colorways(item).map((c) => c.image).filter(Boolean);
+    if (worn.length) return worn;
     if (item.images && item.images.length) return item.images;
     return item.image ? [item.image] : [];
+  }
+
+  function findProduct(id) {
+    const resolved = (cfg.productAliases && cfg.productAliases[id]) || id;
+    return (cfg.products || []).find((p) => p.id === resolved);
   }
 
   function mediaSlot(item, extraClass, srcOverride) {
@@ -58,14 +81,24 @@
 
   window.BVLLY = { mediaSlot, collectionName, bindPhotoSlots };
 
+  function swatches(p) {
+    const dots = colorways(p).map((c) => {
+      const bg = c.hex ? `style="background:${c.hex}"` : '';
+      return `<span class="swatch" ${bg} title="${c.name}"></span>`;
+    }).join('');
+    return dots ? `<div class="card-swatches" aria-hidden="true">${dots}</div>` : '';
+  }
+
   function productCard(p) {
+    const preview = { ...p, fit: 'cover' };
     return `
       <a class="product-card" href="product.html?id=${encodeURIComponent(p.id)}">
-        ${mediaSlot(p)}
+        ${mediaSlot(preview)}
         <div class="product-meta">
           <span class="product-collection">${collectionName(p.collection)}</span>
           <h3>${p.name}</h3>
           <span class="price">${money(p.price)}</span>
+          ${swatches(p)}
         </div>
       </a>`;
   }
@@ -89,7 +122,7 @@
             <h3>${c.name}</h3>
             <p>${c.tagline}</p>
           </div>
-          <span class="product-collection">${count} pieces</span>
+          <span class="product-collection">${count} pieces · 4 colors</span>
         </a>`;
     }).join('');
   }
@@ -136,8 +169,9 @@
     const el = document.querySelector('[data-product-page]');
     if (!el || !cfg.products) return;
 
-    const id = new URLSearchParams(window.location.search).get('id');
-    const product = cfg.products.find((p) => p.id === id);
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const product = findProduct(id);
     if (!product) {
       el.innerHTML = `
         <div class="empty-state">
@@ -147,27 +181,40 @@
       return;
     }
 
+    const ways = colorways(product);
+    const colorParam = params.get('color');
+    const activeColor = ways.find((c) => c.slug === colorParam) || ways.find((c) => c.image === product.image) || ways[0];
+    const activeSrc = activeColor?.image || product.image;
+
     document.title = `${product.name} — ${cfg.brand.name}`;
     const sizes = (product.sizes || []).map((s, i) =>
       `<button type="button" class="size-chip${i === 0 ? ' is-selected' : ''}" data-size="${s}" aria-pressed="${i === 0 ? 'true' : 'false'}">${s}</button>`
     ).join('');
-    const colors = (product.colors || []).map((c) =>
-      `<span class="size-chip color-chip" data-tone="${c}">${c}</span>`
-    ).join('');
+    const colors = ways.map((c) => {
+      const selected = c.slug === activeColor?.slug ? ' is-selected' : '';
+      const tone = c.name.replace(/"/g, '');
+      const bg = c.hex ? `style="--swatch:${c.hex}"` : '';
+      return `<button type="button" class="size-chip color-chip${selected}" data-tone="${tone}" data-color="${c.slug}" data-src="${c.image}" ${bg} aria-pressed="${selected ? 'true' : 'false'}">${c.name}</button>`;
+    }).join('');
     const shots = gallery(product);
     const thumbs = shots.length > 1
-      ? `<div class="thumbs" data-thumbs>${shots.map((src, i) => `
-          <button type="button" class="thumb ${i === 0 ? 'is-active' : ''}" data-src="${src}" aria-label="Photo ${i + 1}">
-            <img src="${src}" alt="">
-          </button>`).join('')}</div>`
+      ? `<div class="thumbs" data-thumbs>${shots.map((src) => {
+          const way = ways.find((c) => c.image === src);
+          const active = src === activeSrc ? 'is-active' : '';
+          const label = way ? way.name : 'Photo';
+          return `
+          <button type="button" class="thumb ${active}" data-src="${src}" data-color="${way?.slug || ''}" aria-label="${label}">
+            <img src="${src}" alt="${product.name} ${label}">
+          </button>`;
+        }).join('')}</div>`
       : '';
 
-    const notifyHref = `contact.html?piece=${encodeURIComponent(product.id)}&size=${encodeURIComponent(product.sizes?.[0] || '')}`;
+    const notifyHref = `contact.html?piece=${encodeURIComponent(product.id)}&size=${encodeURIComponent(product.sizes?.[0] || '')}&color=${encodeURIComponent(activeColor?.name || '')}`;
 
     el.innerHTML = `
       <div class="product-layout">
         <div class="product-gallery">
-          ${mediaSlot(product, 'product-hero', shots[0])}
+          ${mediaSlot({ ...product, fit: 'cover' }, 'product-hero', activeSrc)}
           ${thumbs}
         </div>
         <div class="product-copy">
@@ -178,7 +225,7 @@
           <p class="product-collection">Size</p>
           <div class="size-row" data-size-row>${sizes}</div>
           <p class="product-collection">Color</p>
-          <div class="color-row">${colors}</div>
+          <div class="color-row" data-color-row>${colors}</div>
           <p>Checkout is not live on this draft — request a size below.</p>
           <p style="margin-top:1.25rem;">
             <a class="btn btn-primary" data-notify-link href="${notifyHref}">Notify me</a>
@@ -189,18 +236,37 @@
     bindPhotoSlots(el);
 
     const mainImg = el.querySelector('.product-hero img');
-    el.querySelectorAll('[data-thumbs] .thumb').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        el.querySelectorAll('.thumb').forEach((t) => t.classList.remove('is-active'));
-        btn.classList.add('is-active');
-        if (mainImg) {
-          mainImg.src = btn.dataset.src;
-          mainImg.closest('.media-slot')?.classList.add('has-photo');
-        }
+    const notify = el.querySelector('[data-notify-link]');
+
+    function selectedSize() {
+      return el.querySelector('[data-size-row] .size-chip.is-selected')?.dataset.size || product.sizes?.[0] || '';
+    }
+
+    function setColor(src, slug) {
+      if (mainImg && src) {
+        mainImg.src = src;
+        mainImg.closest('.media-slot')?.classList.add('has-photo');
+      }
+      el.querySelectorAll('.thumb').forEach((t) => t.classList.toggle('is-active', t.dataset.src === src));
+      el.querySelectorAll('[data-color-row] .color-chip').forEach((chip) => {
+        const on = chip.dataset.color === slug;
+        chip.classList.toggle('is-selected', on);
+        chip.setAttribute('aria-pressed', on ? 'true' : 'false');
       });
+      const colorName = ways.find((c) => c.slug === slug)?.name || '';
+      if (notify) {
+        notify.href = `contact.html?piece=${encodeURIComponent(product.id)}&size=${encodeURIComponent(selectedSize())}&color=${encodeURIComponent(colorName)}`;
+      }
+    }
+
+    el.querySelectorAll('[data-thumbs] .thumb').forEach((btn) => {
+      btn.addEventListener('click', () => setColor(btn.dataset.src, btn.dataset.color));
     });
 
-    const notify = el.querySelector('[data-notify-link]');
+    el.querySelectorAll('[data-color-row] .color-chip').forEach((btn) => {
+      btn.addEventListener('click', () => setColor(btn.dataset.src, btn.dataset.color));
+    });
+
     el.querySelectorAll('[data-size-row] .size-chip').forEach((btn) => {
       btn.addEventListener('click', () => {
         el.querySelectorAll('[data-size-row] .size-chip').forEach((chip) => {
@@ -209,8 +275,9 @@
         });
         btn.classList.add('is-selected');
         btn.setAttribute('aria-pressed', 'true');
+        const colorName = el.querySelector('[data-color-row] .color-chip.is-selected')?.textContent.trim() || '';
         if (notify) {
-          notify.href = `contact.html?piece=${encodeURIComponent(product.id)}&size=${encodeURIComponent(btn.dataset.size || '')}`;
+          notify.href = `contact.html?piece=${encodeURIComponent(product.id)}&size=${encodeURIComponent(btn.dataset.size || '')}&color=${encodeURIComponent(colorName)}`;
         }
       });
     });
@@ -225,6 +292,7 @@
       description: product.description,
       image: shots.map((src) => window.absoluteUrl(src)),
       brand: { '@type': 'Brand', name: cfg.brand.name },
+      color: ways.map((c) => c.name).join(', '),
       offers: {
         '@type': 'Offer',
         price: product.price,
@@ -243,8 +311,10 @@
     const params = new URLSearchParams(window.location.search);
     const current = params.get('piece') || '';
     const size = params.get('size') || '';
+    const color = params.get('color') || '';
+    const resolvedId = (cfg.productAliases && cfg.productAliases[current]) || current;
     select.innerHTML = `<option value="">Just saying hello</option>` +
-      cfg.products.map((p) => `<option value="${p.name}" ${p.id === current ? 'selected' : ''}>${p.name}</option>`).join('');
+      cfg.products.map((p) => `<option value="${p.name}" ${p.id === resolvedId ? 'selected' : ''}>${p.name}</option>`).join('');
 
     const sizeSelect = document.querySelector('[name="size"]');
     if (sizeSelect) {
@@ -256,11 +326,22 @@
       }).join('');
     }
 
+    const colorSelect = document.querySelector('[name="color"]');
+    if (colorSelect) {
+      const colors = ['', 'Beige', 'Electric Blue', 'Black', 'Army Green'];
+      colorSelect.innerHTML = colors.map((c) => {
+        const label = c || 'Not sure yet';
+        const selected = c && c.toLowerCase() === color.toLowerCase() ? 'selected' : '';
+        return `<option value="${c}" ${selected}>${label}</option>`;
+      }).join('');
+    }
+
     const message = document.querySelector('[name="message"]');
-    if (message && !message.value && (current || size)) {
-      const piece = cfg.products.find((p) => p.id === current);
+    if (message && !message.value && (current || size || color)) {
+      const piece = findProduct(current);
       const parts = [];
       if (piece) parts.push(`Interested in ${piece.name}.`);
+      if (color) parts.push(`${color}.`);
       if (size) parts.push(`Size ${size}.`);
       message.placeholder = parts.length
         ? `${parts.join(' ')} City and anything else we should know.`

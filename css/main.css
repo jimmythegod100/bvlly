@@ -436,7 +436,7 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
 .thumb img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
 }
 
@@ -467,16 +467,41 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
   color: var(--brand-primary);
 }
 
-.color-chip[data-tone="Bone"] {
-  background: #ece8e1;
+.color-chip[data-tone="Beige"] {
+  background: #d4c4a8;
   color: #111;
-  border-color: #d4cfc6;
+  border-color: #c4b496;
 }
 
-.color-chip[data-tone="Ink"] {
+.color-chip[data-tone="Electric Blue"] {
+  background: #1560ff;
+  color: #fff;
+  border-color: #3d7aff;
+}
+
+.color-chip[data-tone="Black"] {
   background: #111;
   color: #ece8e1;
   border-color: #444;
+}
+
+.color-chip[data-tone="Army Green"] {
+  background: #4a5d23;
+  color: #ece8e1;
+  border-color: #6a7d43;
+}
+
+.card-swatches {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+}
+
+.swatch {
+  width: 0.7rem;
+  height: 0.7rem;
+  border: 1px solid #3a3a3a;
+  display: block;
 }
 
 .contact-grid {

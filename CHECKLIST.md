@@ -6,7 +6,7 @@ Draft catalog. Revisit when a domain and inbox are locked.
 
 - [x] Brand name BVLLY in header, footer, titles
 - [x] Catalog SKUs and prices in `js/site-config.js`
-- [x] Drop photos + studio mockups in `images/`
+- [x] On-body lookbook photos in four colorways
 - [ ] Logo file if a mark exists beyond the letterspaced wordmark
 - [ ] Confirm `hello@bvlly.com` is the real inbox
 - [ ] Instagram URL
