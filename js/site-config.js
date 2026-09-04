@@ -33,7 +33,7 @@
       email: 'hello@bvlly.com',
       phone: '',
       address: 'Online',
-      siteUrl: '',
+      siteUrl: 'https://jimmythegod100.github.io/bvlly',
       instagram: ''
     },
     hero: {

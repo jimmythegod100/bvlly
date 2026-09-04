@@ -4,6 +4,19 @@ Static catalog for **BVLLY** — a clothing label whose stance comes from the ex
 
 Two languages in the drop: gothic **Beware** prints and the quiet embroidered **Mark**. Every piece has four colorways — beige, electric blue, black, army green — photographed on a person.
 
+## Live site (GitHub Pages)
+
+Same path as Vincere Media Works: a public repo, then GitHub Pages.
+
+**URL:** [https://jimmythegod100.github.io/bvlly/](https://jimmythegod100.github.io/bvlly/)
+
+`brand.siteUrl` in [`js/site-config.js`](js/site-config.js) is already set to that origin. After the `bvlly` repo exists on GitHub:
+
+1. Push this branch to `main` on `jimmythegod100/bvlly`.
+2. **Settings → Pages → Source: GitHub Actions** (workflow: [`.github/workflows/pages.yml`](.github/workflows/pages.yml)).
+
+Optional custom domain later: Cloudflare DNS → GitHub Pages, then add a `CNAME` file at the repo root.
+
 ## Preview locally
 
 ```bash
@@ -15,22 +28,8 @@ Open [http://localhost:43211](http://localhost:43211).
 Or:
 
 ```bash
-python3 -m http.server 43211 --bind 0.0.0.0
+python3 dev-server.py
 ```
-
-## Share / GitHub Pages
-
-Same HTML kit path as Valley Notary and Vincere Media Works.
-
-1. Create a public GitHub repo (suggested name: `bvlly`).
-2. Push `main` (or merge this branch into `main`).
-3. In the repo: **Settings → Pages → Source: GitHub Actions**. The workflow in [`.github/workflows/pages.yml`](.github/workflows/pages.yml) publishes the repository root.
-4. Site URL will be `https://<github-user>.github.io/<repo>/`.
-5. Put that origin (no trailing slash) in `brand.siteUrl` inside [`js/site-config.js`](js/site-config.js), then update [`robots.txt`](robots.txt) and [`sitemap.xml`](sitemap.xml).
-
-Relative asset paths work on a project site (`username.github.io/bvlly/`) and on a custom domain at the root.
-
-Optional custom domain: Cloudflare DNS → GitHub Pages, then add a `CNAME` file at the repo root.
 
 ## What’s in this draft
 
@@ -38,7 +37,7 @@ Optional custom domain: Cloudflare DNS → GitHub Pages, then add a `CNAME` file
 - Shop with collection filters
 - Product pages (size selection, color, notify-me)
 - About, contact / waitlist, privacy
-- Six SKUs in `js/site-config.js`
+- Five pieces in `js/site-config.js`, each in four colorways
 
 Checkout is not live. Waitlist uses FormSubmit to `hello@bvlly.com` (placeholder inbox).
 

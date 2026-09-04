@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# Replace with the live origin once Pages (or a custom domain) is on.
-Sitemap: sitemap.xml
+Sitemap: https://jimmythegod100.github.io/bvlly/sitemap.xml

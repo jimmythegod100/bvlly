@@ -42,7 +42,7 @@
   }
 
   function pageHref() {
-    if (page === 'home' || page === '404') return 'index.html';
+    if (page === 'home' || page === '404') return '';
     if (page === 'product') {
       const id = new URLSearchParams(location.search).get('id');
       return id ? `product.html?id=${encodeURIComponent(id)}` : 'product.html';
