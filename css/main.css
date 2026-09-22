@@ -426,6 +426,23 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
   border: 1px solid var(--border);
 }
 
+/* Homepage hero: full-bleed photo, no light frame against black */
+.media-slot.hero-media {
+  border: none;
+  border-bottom: none;
+  background: #000;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+
+.media-slot.hero-media img {
+  object-fit: cover;
+  object-position: center center;
+  /* Slight overscale hides 1px JPEG/scaler light fringe on black */
+  transform: scale(1.02);
+  transform-origin: center center;
+}
+
 .media-slot.about-media { background: #111; }
 
 .media-slot img {
@@ -441,6 +458,7 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
 }
 
 .media-slot.is-studio img { object-fit: contain; }
+.media-slot.hero-media.is-studio img { object-fit: cover; }
 
 .media-slot.has-photo img { opacity: 1; }
 
