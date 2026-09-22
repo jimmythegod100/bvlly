@@ -111,7 +111,7 @@
           { name: 'Black', slug: 'black', hex: '#111111', image: worn('bb-crew', 'black') }
         ],
         views: ['images/lookbook/bb-crew-black-back.jpg'],
-        description: 'Oversized heavyweight crewneck. Front: a large silver interlocking BB. Back: a micro ~1×1″ white embroidered bully mark high on the nape/yoke — centered, just below the collar seam. Black.',
+        description: 'Oversized heavyweight crewneck. Front: a large silver interlocking BB. Back: a micro ~1×1″ embroidered exotic bulldog (tan/black Mark stitch) high on the nape/yoke — centered, just below the collar seam. Black.',
         image: worn('bb-crew', 'black'),
         fit: 'cover',
         featured: true
