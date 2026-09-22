@@ -434,7 +434,7 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
   /* Prefer full figure in frame — no cropped crowns/heads */
   object-fit: contain;
   object-position: center center;
-  padding: 0.55rem;
+  padding: 0;
   box-sizing: border-box;
   opacity: 0;
   transition: opacity 0.25s ease;
