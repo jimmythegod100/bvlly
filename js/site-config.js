@@ -7,7 +7,7 @@
  */
 (function () {
   // Bump when lookbook JPGs change so browsers skip stale CDN/disk cache.
-  const ASSET_V = '20260922j';
+  const ASSET_V = '20260922k';
 
   const COLORWAYS = [
     { name: 'Pink', slug: 'pink', hex: '#e5b3c5' },
@@ -148,8 +148,10 @@
         collection: 'sets',
         price: 168,
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-        colors: wornColors('mark-hood'),
-        description: 'Matching athletic zip set — long-sleeve full-zip hooded jacket + slim tapered jogger, one SKU. High zip neck, angled zippered hand pockets, technical matte fleece. Quiet Mark: micro ~1×1″ embroidered exotic bulldog on the left chest and matching micro Mark on the left upper thigh. No slogan. Pink and black.',
+        colors: [
+          { name: 'Black', slug: 'black', hex: '#111111', image: worn('mark-hood', 'black') }
+        ],
+        description: 'Matching athletic zip set — long-sleeve full-zip hooded jacket + slim tapered jogger, one SKU. High zip neck, angled zippered hand pockets, technical matte fleece. Quiet Mark: micro ~1×1″ embroidered exotic bulldog on the left chest and matching micro Mark on the left upper thigh. No slogan. Black.',
         image: worn('mark-hood', 'black'),
         fit: 'cover',
         featured: false
