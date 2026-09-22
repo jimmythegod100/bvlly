@@ -214,7 +214,7 @@
 
     el.innerHTML = `
       <div class="container hero-grid">
-        <div>
+        <div class="hero-copy">
           ${mascot}
           ${cfg.hero.kicker ? `<p class="hero-kicker">${cfg.hero.kicker}</p>` : ''}
           <h1>${cfg.hero.headline}</h1>

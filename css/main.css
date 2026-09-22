@@ -169,11 +169,15 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
   align-items: center;
 }
 
+.hero-copy {
+  max-width: 36rem;
+}
+
 .hero-mascot {
   display: block;
   width: min(100%, 14.5rem);
   height: auto;
-  margin: 0 0 1.35rem;
+  margin: 0 auto 1.35rem;
   object-fit: contain;
 }
 
