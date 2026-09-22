@@ -6,20 +6,27 @@
  * so Open Graph, canonical, sitemap, and the waitlist redirect resolve.
  */
 (function () {
+  // Bump when lookbook JPGs change so browsers skip stale CDN/disk cache.
+  const ASSET_V = '20260922g';
+
   const COLORWAYS = [
     { name: 'Pink', slug: 'pink', hex: '#e5b3c5' },
     { name: 'Black', slug: 'black', hex: '#111111' }
   ];
 
+  function asset(path) {
+    return `${path}?v=${ASSET_V}`;
+  }
+
   function wornColors(id) {
     return COLORWAYS.map((c) => ({
       ...c,
-      image: `images/lookbook/${id}-${c.slug}.jpg`
+      image: asset(`images/lookbook/${id}-${c.slug}.jpg`)
     }));
   }
 
   function worn(id, slug) {
-    return `images/lookbook/${id}-${slug}.jpg`;
+    return asset(`images/lookbook/${id}-${slug}.jpg`);
   }
 
   window.SITE_CONFIG = {
@@ -38,8 +45,8 @@
       kicker: '',
       headline: 'Built from the breed.',
       subhead: 'Oversized heavyweight streetwear. The exotic bully — compact, stubborn, unhurried — is the stance behind the cut, the gothic print, and the 1×1″ embroidered mark.',
-      mascot: 'images/brand/bully-mascot.png',
-      image: 'images/lookbook/hero-mark-hood.jpg',
+      mascot: asset('images/brand/bully-mascot.png'),
+      image: asset('images/lookbook/hero-mark-hood.jpg'),
       fit: 'cover',
       ctaPrimary: { label: 'Shop the drop', href: 'shop.html' },
       ctaSecondary: { label: 'The mark', href: 'about.html' }
@@ -88,8 +95,8 @@
           { name: 'Black', slug: 'black', hex: '#111111', image: worn('bb-sweatsuit', 'black') }
         ],
         views: [
-          'images/lookbook/bb-sweatsuit-black-thigh.jpg',
-          'images/lookbook/bb-sweatsuit-black-ankle.jpg'
+          asset('images/lookbook/bb-sweatsuit-black-thigh.jpg'),
+          asset('images/lookbook/bb-sweatsuit-black-ankle.jpg')
         ],
         description: 'Matching black sweatsuit — oversized heavyweight crew + tapered pant, one set. Chest: large silver interlocking BB. Pant: matching BB on the upper thigh, thick rib waistband with black cords and polished silver aglets, outer ankle zip that flares over sneakers. Matte heavyweight fleece. Black.',
         image: worn('bb-sweatsuit', 'black'),
@@ -187,7 +194,7 @@
     },
     seo: {
       description: 'BVLLY — clothing drawn from the exotic bully. Oversized streetwear in pink and black. Gothic Beware prints and embroidered marks.',
-      ogImage: 'images/og.jpg'
+      ogImage: asset('images/og.jpg')
     }
   };
 })();
