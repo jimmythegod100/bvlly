@@ -124,7 +124,10 @@
             <h3>${c.name}</h3>
             <p>${c.tagline}</p>
           </div>
-          <span class="product-collection">${count} pieces</span>
+          <span class="collection-meta">
+            <span class="product-collection">${count} pieces</span>
+            <span class="collection-explore">Explore →</span>
+          </span>
         </a>`;
     }).join('');
   }

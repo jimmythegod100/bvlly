@@ -145,22 +145,49 @@
 
     const year = new Date().getFullYear();
     const ig = brand.instagram
-      ? `<li><a href="${brand.instagram}">Instagram</a></li>`
+      ? `<a href="${brand.instagram}">Instagram</a>`
       : '';
+    const formAction = cfg.contact?.formAction || '';
+    const nextUrl = brand.siteUrl
+      ? window.absoluteUrl(cfg.contact?.thanksPage || 'thanks.html')
+      : (cfg.contact?.thanksPage || 'thanks.html');
+
     footer.innerHTML = `
-      <div class="container footer-inner">
-        <div>
+      <div class="container footer-grid">
+        <div class="footer-col">
           <div class="footer-brand">${logoLabel()}</div>
           <p class="footer-tagline">${brand.tagline}</p>
+          <p class="footer-blurb">Oversized blanks. Two temperatures. Same stance.</p>
         </div>
-        <ul class="footer-links">
-          <li><a href="shop.html">Shop</a></li>
-          <li><a href="collections.html">Collections</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="privacy.html">Privacy</a></li>
-          ${ig}
-        </ul>
+        <div class="footer-col">
+          <h4 class="footer-heading">Navigate</h4>
+          <div class="footer-nav">
+            <a href="index.html">Home</a>
+            <a href="shop.html">Shop</a>
+            <a href="collections.html">Collections</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy.html">Privacy</a>
+            ${ig}
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-heading">Stay notified</h4>
+          <p class="footer-blurb">Early access to the pink &amp; black drop. No checkout on this draft.</p>
+          ${formAction ? `
+          <form class="newsletter-form" method="POST" action="${formAction}">
+            <input type="hidden" name="_subject" value="BVLLY drop waitlist">
+            <input type="hidden" name="_next" value="${nextUrl}">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+            <input type="hidden" name="message" value="Footer waitlist signup">
+            <label class="visually-hidden" for="footer-email">Email</label>
+            <input type="email" id="footer-email" name="email" placeholder="Email" required autocomplete="email">
+            <button class="btn btn-primary" type="submit">Join</button>
+          </form>` : `<a class="btn btn-outline" href="contact.html">Join the drop</a>`}
+        </div>
+      </div>
+      <div class="container footer-bottom">
         <p class="footer-copy">© ${year} ${brand.name}. Draft catalog — checkout not live.</p>
       </div>`;
   }
