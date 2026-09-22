@@ -71,12 +71,35 @@
         tagline: 'Interlocking BB on the chest. Black.'
       },
       {
+        id: 'sets',
+        name: 'Sets',
+        tagline: 'Matching crew + pant. One SKU.'
+      },
+      {
         id: 'accessories',
         name: 'Accessories',
         tagline: 'The 1×1″ mark, off the chest. Pink and black.'
       }
     ],
     products: [
+      {
+        id: 'bb-sweatsuit',
+        name: 'BB Sweatsuit',
+        collection: 'sets',
+        price: 178,
+        sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+        colors: [
+          { name: 'Black', slug: 'black', hex: '#111111', image: worn('bb-sweatsuit', 'black') }
+        ],
+        views: [
+          'images/lookbook/bb-sweatsuit-black-thigh.jpg',
+          'images/lookbook/bb-sweatsuit-black-ankle.jpg'
+        ],
+        description: 'Matching black sweatsuit — oversized heavyweight crew + tapered pant, one set. Chest: large silver interlocking BB. Pant: matching BB on the upper thigh, thick rib waistband with black cords and polished silver aglets, outer ankle zip that flares over sneakers. Same matte fleece language as the BB Crew. Black.',
+        image: worn('bb-sweatsuit', 'black'),
+        fit: 'cover',
+        featured: true
+      },
       {
         id: 'bb-crew',
         name: 'BB Crew',
