@@ -58,7 +58,7 @@
       {
         id: 'graphic',
         name: 'Beware',
-        tagline: 'Gothic print. Pink and black.'
+        tagline: 'Gothic print. Beige, pink, and black.'
       },
       {
         id: 'mark',
@@ -98,8 +98,12 @@
         collection: 'graphic',
         price: 128,
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-        colors: wornColors('beware-hood'),
-        description: 'Oversized heavyweight pullover. Front: “Bully BEWARE!” in distressed blackletter. Back: “Never-mind the dog, beware the owner.” Drop shoulder, thick hood, rib that holds. Pink and black.',
+        colors: [
+          { name: 'Beige', slug: 'beige', hex: '#c9b89a', image: worn('beware-hood', 'beige') },
+          { name: 'Pink', slug: 'pink', hex: '#e5b3c5', image: worn('beware-hood', 'pink') },
+          { name: 'Black', slug: 'black', hex: '#111111', image: worn('beware-hood', 'black') }
+        ],
+        description: 'Oversized heavyweight pullover. Front: “Bully BEWARE!” in distressed blackletter. Back: “Never-mind the dog, beware the owner.” Drop shoulder, thick hood, rib that holds. Beige (brown print), pink, and black.',
         image: worn('beware-hood', 'black'),
         fit: 'cover',
         featured: true
