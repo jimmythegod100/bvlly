@@ -7,7 +7,7 @@
  */
 (function () {
   // Bump when lookbook JPGs change so browsers skip stale CDN/disk cache.
-  const ASSET_V = '20260922w';
+  const ASSET_V = '20260922x';
 
   const COLORWAYS = [
     { name: 'Pink', slug: 'pink', hex: '#e5b3c5' },
@@ -127,6 +127,22 @@
         colors: wornColors('beware-tee'),
         description: 'Heavyweight oversized tee with the same chest print as the hood — “Bully BEWARE!” in distressed gothic type. Pink and black.',
         image: worn('beware-tee', 'black'),
+        fit: 'contain',
+        featured: true
+      },
+      {
+        id: 'beware-crop-hood',
+        name: 'Beware Crop Hood',
+        collection: 'graphic',
+        price: 118,
+        sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+        colors: [
+          { name: 'Heather', slug: 'heather', hex: '#b7b7b7', image: worn('beware-crop-hood', 'heather') },
+          { name: 'Black', slug: 'black', hex: '#111111', image: worn('beware-crop-hood', 'black') },
+          { name: 'Charcoal', slug: 'charcoal', hex: '#4a4d52', image: worn('beware-crop-hood', 'charcoal') }
+        ],
+        description: 'Women’s boxy crop hoodie + matching high-waisted leggings, one set. Front: “Bully BEWARE!” in distressed silver blackletter, center chest. Drop shoulder, thick hood with drawstrings, ribbed crop hem. Heather, black, and charcoal.',
+        image: worn('beware-crop-hood', 'black'),
         fit: 'contain',
         featured: true
       },
