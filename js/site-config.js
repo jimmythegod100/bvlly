@@ -48,7 +48,7 @@
       intro: 'BVLLY is a clothing label. The line takes its essence from the exotic bully: short, thick, unbothered. That stance shows up in the oversized cut, the silver gothic type, and a 1×1″ embroidered mark.',
       body: [
         'The Beware line is loud on purpose: Old English type on the chest — “Bully BEWARE!” — and “Never-mind the dog, beware the owner” on the back of the hood.',
-        'The Mark line is the other temperature: a 1×1″ embroidered exotic bulldog on the left chest, no slogan. Same stance. Quieter.',
+        'The Mark line is the other temperature: a micro ~1×1″ embroidered exotic bulldog on the left chest (halfway to the underarm, a few inches below the collar), no slogan. Same stance. Quieter.',
         'Every piece runs in pink and black — cut oversized. Checkout is not live yet; join the list if you want a size.'
       ],
       image: worn('mark-tee', 'black'),
@@ -63,7 +63,7 @@
       {
         id: 'mark',
         name: 'The Mark',
-        tagline: '1×1″ embroidered bully. Pink and black.'
+        tagline: 'Micro ~1×1″ embroidered bully. Left chest. Pink and black.'
       },
       {
         id: 'monogram',
@@ -78,7 +78,7 @@
       {
         id: 'accessories',
         name: 'Accessories',
-        tagline: 'The 1×1″ mark, off the chest. Pink and black.'
+        tagline: 'The micro ~1×1″ mark, off the chest. Pink and black.'
       }
     ],
     products: [
@@ -110,7 +110,7 @@
           { name: 'Black', slug: 'black', hex: '#111111', image: worn('bb-crew', 'black') }
         ],
         views: ['images/lookbook/bb-crew-black-back.jpg'],
-        description: 'Oversized heavyweight crewneck. Front: a large silver interlocking BB. Back: a 1×1″ white embroidered bully mark on the upper back, below the collar. Black.',
+        description: 'Oversized heavyweight crewneck. Front: a large silver interlocking BB. Back: a micro ~1×1″ white embroidered bully mark on the upper-mid back. Black.',
         image: worn('bb-crew', 'black'),
         fit: 'cover',
         featured: true
@@ -149,7 +149,7 @@
         price: 54,
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
         colors: wornColors('mark-tee'),
-        description: 'Heavyweight crew. 1×1″ embroidered exotic bulldog on the left chest. No slogan. The quiet half of the drop. Pink and black.',
+        description: 'Heavyweight crew. Micro ~1×1″ embroidered exotic bulldog on the left chest — quiet, not a chest print. No slogan. Pink and black.',
         image: worn('mark-tee', 'black'),
         fit: 'cover',
         featured: true
@@ -161,7 +161,7 @@
         price: 118,
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
         colors: wornColors('mark-hood'),
-        description: 'Oversized hoodie. No chest slogan — just the 1×1″ embroidered mark on the left chest. Pink and black.',
+        description: 'Oversized hoodie. No chest slogan — just a micro ~1×1″ embroidered mark on the left chest. Pink and black.',
         image: worn('mark-hood', 'black'),
         fit: 'cover',
         featured: true
@@ -173,7 +173,7 @@
         price: 38,
         sizes: ['One size'],
         colors: wornColors('mark-cap'),
-        description: 'Structured cap. 1×1″ embroidered exotic bulldog on the front panel. Pink and black.',
+        description: 'Structured cap. Micro ~1×1″ embroidered exotic bulldog centered on the front panel. Pink and black.',
         image: worn('mark-cap', 'black'),
         fit: 'cover',
         featured: false
