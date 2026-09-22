@@ -331,7 +331,7 @@
 
     const colorSelect = document.querySelector('[name="color"]');
     if (colorSelect) {
-      const colors = ['', 'Beige', 'Dust Blue', 'Pink', 'Black', 'Army Green'];
+      const colors = ['', 'Pink', 'Black'];
       colorSelect.innerHTML = colors.map((c) => {
         const label = c || 'Not sure yet';
         const selected = c && c.toLowerCase() === color.toLowerCase() ? 'selected' : '';

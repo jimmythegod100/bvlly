@@ -467,18 +467,6 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
   color: var(--brand-primary);
 }
 
-.color-chip[data-tone="Beige"] {
-  background: #d4c4a8;
-  color: #111;
-  border-color: #c4b496;
-}
-
-.color-chip[data-tone="Dust Blue"] {
-  background: #9bb1c9;
-  color: #111;
-  border-color: #7f96ae;
-}
-
 .color-chip[data-tone="Pink"] {
   background: #e5b3c5;
   color: #111;
@@ -489,12 +477,6 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
   background: #111;
   color: #ece8e1;
   border-color: #444;
-}
-
-.color-chip[data-tone="Army Green"] {
-  background: #4a5d23;
-  color: #ece8e1;
-  border-color: #6a7d43;
 }
 
 .card-swatches {
