@@ -7,7 +7,7 @@
  */
 (function () {
   // Bump when lookbook JPGs change so browsers skip stale CDN/disk cache.
-  const ASSET_V = '20260922k';
+  const ASSET_V = '20260922l';
 
   const COLORWAYS = [
     { name: 'Pink', slug: 'pink', hex: '#e5b3c5' },
@@ -46,10 +46,10 @@
       headline: 'Built from the breed.',
       subhead: 'Oversized heavyweight streetwear. The exotic bully — compact, stubborn, unhurried — is the stance behind the cut, the gothic print, and the 1×1″ embroidered mark.',
       mascot: asset('images/brand/bully-mascot.png'),
-      image: worn('mark-tee', 'black'),
+      image: asset('images/lookbook/hero-mark-hood.jpg'),
       fit: 'cover',
-      ctaPrimary: { label: 'Shop Mark Tee', href: 'product.html?id=mark-tee' },
-      ctaSecondary: { label: 'Shop The Mark', href: 'shop.html?collection=mark' }
+      ctaPrimary: { label: 'Shop the drop', href: 'shop.html' },
+      ctaSecondary: { label: 'The mark', href: 'about.html' }
     },
     about: {
       headline: 'Two ways to wear it.',
@@ -86,18 +86,6 @@
     ],
     products: [
       {
-        id: 'mark-tee',
-        name: 'Mark Tee',
-        collection: 'mark',
-        price: 54,
-        sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-        colors: wornColors('mark-tee'),
-        description: 'Heavyweight crew. Micro ~1×1″ embroidered exotic bulldog on the left chest — quiet, not a chest print. No slogan. Pink and black.',
-        image: worn('mark-tee', 'black'),
-        fit: 'cover',
-        featured: true
-      },
-      {
         id: 'bb-sweatsuit',
         name: 'BB Sweatsuit',
         collection: 'sets',
@@ -113,7 +101,7 @@
         description: 'Matching black sweatsuit — oversized heavyweight crew + tapered pant, one set. Chest: large silver interlocking BB. Pant: matching BB on the upper thigh, thick rib waistband with black cords and polished silver aglets, outer ankle zip that flares over sneakers. Matte heavyweight fleece. Black.',
         image: worn('bb-sweatsuit', 'black'),
         fit: 'cover',
-        featured: false
+        featured: true
       },
       {
         id: 'beware-hood',
@@ -128,7 +116,7 @@
         description: 'Oversized heavyweight pullover. Front: “Bully BEWARE!” in distressed blackletter. Back: “Never-mind the dog, beware the owner.” Drop shoulder, thick hood, rib that holds. Pink and black.',
         image: worn('beware-hood', 'black'),
         fit: 'cover',
-        featured: false
+        featured: true
       },
       {
         id: 'beware-tee',
@@ -140,7 +128,19 @@
         description: 'Heavyweight oversized tee with the same chest print as the hood — “Bully BEWARE!” in distressed gothic type. Pink and black.',
         image: worn('beware-tee', 'black'),
         fit: 'cover',
-        featured: false
+        featured: true
+      },
+      {
+        id: 'mark-tee',
+        name: 'Mark Tee',
+        collection: 'mark',
+        price: 54,
+        sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+        colors: wornColors('mark-tee'),
+        description: 'Heavyweight crew. Micro ~1×1″ embroidered exotic bulldog on the left chest — quiet, not a chest print. No slogan. Pink and black.',
+        image: worn('mark-tee', 'black'),
+        fit: 'cover',
+        featured: true
       },
       {
         id: 'mark-hood',
@@ -154,7 +154,7 @@
         description: 'Matching athletic zip set — long-sleeve full-zip hooded jacket + slim tapered jogger, one SKU. High zip neck, angled zippered hand pockets, technical matte fleece. Quiet Mark: micro ~1×1″ embroidered exotic bulldog on the left chest and matching micro Mark on the left upper thigh. No slogan. Black.',
         image: worn('mark-hood', 'black'),
         fit: 'cover',
-        featured: false
+        featured: true
       },
       {
         id: 'mark-shorts',
@@ -169,7 +169,7 @@
         description: 'Athletic mid-thigh shorts in matte jersey. Elastic waist with drawstring, side welt pockets. Micro ~1×1″ embroidered exotic bulldog above the left hem — quiet Mark placement, not a thigh print. Graphite and black.',
         image: worn('mark-shorts', 'graphite'),
         fit: 'cover',
-        featured: false
+        featured: true
       },
       {
         id: 'mark-cap',
