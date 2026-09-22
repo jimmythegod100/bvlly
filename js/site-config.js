@@ -69,12 +69,32 @@
         tagline: 'Small embroidered bully. Five colorways.'
       },
       {
+        id: 'monogram',
+        name: 'Monogram',
+        tagline: 'Interlocking BB on the chest. Black.'
+      },
+      {
         id: 'accessories',
         name: 'Accessories',
         tagline: 'The mark, off the chest. Five colorways.'
       }
     ],
     products: [
+      {
+        id: 'bb-crew',
+        name: 'BB Crew',
+        collection: 'monogram',
+        price: 98,
+        sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+        colors: [
+          { name: 'Black', slug: 'black', hex: '#111111', image: worn('bb-crew', 'black') }
+        ],
+        views: ['images/lookbook/bb-crew-black-back.jpg'],
+        description: 'Oversized heavyweight crewneck. Front: a large silver interlocking BB. Back: a small white bully mark at the nape. Black.',
+        image: worn('bb-crew', 'black'),
+        fit: 'cover',
+        featured: true
+      },
       {
         id: 'beware-hood',
         name: 'Beware Hood',

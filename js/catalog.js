@@ -35,7 +35,9 @@
 
   function gallery(item) {
     const worn = colorways(item).map((c) => c.image).filter(Boolean);
-    if (worn.length) return worn;
+    const extra = (item.views || []).filter((src) => src && !worn.includes(src));
+    const shots = worn.concat(extra);
+    if (shots.length) return shots;
     if (item.images && item.images.length) return item.images;
     return item.image ? [item.image] : [];
   }
@@ -201,9 +203,10 @@
       ? `<div class="thumbs" data-thumbs>${shots.map((src) => {
           const way = ways.find((c) => c.image === src);
           const active = src === activeSrc ? 'is-active' : '';
-          const label = way ? way.name : 'Photo';
+          const label = way ? way.name : (src.includes('-back') ? 'Back' : 'Photo');
+          const color = way?.slug || (src.includes('-back') ? (ways[0]?.slug || '') : '');
           return `
-          <button type="button" class="thumb ${active}" data-src="${src}" data-color="${way?.slug || ''}" aria-label="${label}">
+          <button type="button" class="thumb ${active}" data-src="${src}" data-color="${color}" aria-label="${label}">
             <img src="${src}" alt="${product.name} ${label}">
           </button>`;
         }).join('')}</div>`
