@@ -167,6 +167,21 @@
         featured: true
       },
       {
+        id: 'mark-shorts',
+        name: 'Mark Shorts',
+        collection: 'mark',
+        price: 58,
+        sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+        colors: [
+          { name: 'Graphite', slug: 'graphite', hex: '#4a4d52', image: worn('mark-shorts', 'graphite') },
+          { name: 'Black', slug: 'black', hex: '#111111', image: worn('mark-shorts', 'black') }
+        ],
+        description: 'Athletic mid-thigh shorts in matte jersey. Elastic waist with drawstring, side welt pockets. Micro ~1×1″ embroidered exotic bulldog above the left hem — quiet Mark placement, not a thigh print. Graphite and black.',
+        image: worn('mark-shorts', 'graphite'),
+        fit: 'cover',
+        featured: true
+      },
+      {
         id: 'mark-cap',
         name: 'Mark Cap',
         collection: 'accessories',
