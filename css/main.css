@@ -426,55 +426,31 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
   border: 1px solid var(--border);
 }
 
-/* Homepage hero: full-bleed photo, no light frame against black */
-.media-slot.hero-media {
-  border: none;
-  border-bottom: none;
-  background: #000;
-  aspect-ratio: 3 / 4;
-  overflow: hidden;
-}
-
-.media-slot.hero-media img {
-  object-fit: cover;
-  object-position: center center;
-  /* Slight overscale hides 1px JPEG/scaler light fringe on black */
-  transform: scale(1.02);
-  transform-origin: center center;
-}
-
 .media-slot.about-media { background: #111; }
 
 .media-slot img {
   width: 100%;
   height: 100%;
-  /* Prefer full figure in frame — no cropped crowns/heads */
-  object-fit: contain;
-  object-position: center center;
-  padding: 0;
-  box-sizing: border-box;
+  object-fit: cover;
   opacity: 0;
   transition: opacity 0.25s ease;
 }
 
 .media-slot.is-studio img { object-fit: contain; }
-.media-slot.hero-media.is-studio img { object-fit: cover; }
 
 .media-slot.has-photo img { opacity: 1; }
 
-/* Only show “Photo coming” when the image is missing or failed */
+.media-slot.has-photo .media-fallback { display: none; }
+
 .media-fallback {
   position: absolute;
   inset: 0;
-  display: none;
+  display: flex;
   flex-direction: column;
   justify-content: flex-end;
   padding: 1.15rem;
   pointer-events: none;
-  background: var(--brand-surface);
 }
-
-.media-slot.is-empty .media-fallback { display: flex; }
 
 .media-kicker,
 .media-note {
@@ -537,8 +513,7 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
 .thumb img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  object-position: center center;
+  object-fit: cover;
   display: block;
 }
 
@@ -737,7 +712,7 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
 .footer-copy {
   margin: 0;
   font-size: 0.85rem;
-  color: var(--text-muted);
+  color: #6f6a64;
 }
 
 /* Legacy footer helpers kept for any static markup */
@@ -823,7 +798,6 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
     top: 100%;
     left: 0;
     right: 0;
-    z-index: 120;
     flex-direction: column;
     background: #0c0b0a;
     border-bottom: 1px solid var(--border);

@@ -65,16 +65,8 @@
     upsertMeta('property', 'og:title', titleBase);
     upsertMeta('property', 'og:description', desc);
     if (brand.siteUrl) upsertMeta('property', 'og:url', window.absoluteUrl(pageHref()));
-
-    let ogImage = cfg.seo?.ogImage;
-    if (page === 'product' && cfg.products) {
-      const id = new URLSearchParams(location.search).get('id');
-      const resolved = (cfg.productAliases && cfg.productAliases[id]) || id;
-      const product = cfg.products.find((p) => p.id === resolved);
-      if (product?.image) ogImage = product.image;
-    }
-    if (ogImage) {
-      const og = window.absoluteUrl(ogImage);
+    if (cfg.seo?.ogImage) {
+      const og = window.absoluteUrl(cfg.seo.ogImage);
       upsertMeta('property', 'og:image', og);
       upsertMeta('property', 'og:image:width', '1200');
       upsertMeta('property', 'og:image:height', '630');

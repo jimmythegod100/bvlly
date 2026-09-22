@@ -14,9 +14,9 @@
   --font-body: 'Outfit', system-ui, sans-serif;
 
   --text: var(--brand-dark);
-  --text-muted: #b0a89c;
+  --text-muted: #9a9388;
   --border: #2a2a2a;
-  --photo-well: #0c0c0c;
+  --photo-well: #ece8e1;
   --radius: 0;
   --shadow: none;
   --max-width: 1220px;
