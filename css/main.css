@@ -117,7 +117,7 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
 .nav-cta:hover { background: var(--brand-primary); color: #111 !important; text-decoration: none; }
 
 .hero {
-  padding: 4.75rem 0 3.75rem;
+  padding: 3.5rem 0 3.75rem;
   border-bottom: 1px solid var(--border);
 }
 
@@ -126,6 +126,14 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
   grid-template-columns: 1.05fr 0.95fr;
   gap: 3rem;
   align-items: center;
+}
+
+.hero-mascot {
+  display: block;
+  width: min(100%, 14.5rem);
+  height: auto;
+  margin: 0 0 1.35rem;
+  object-fit: contain;
 }
 
 .hero-kicker {
@@ -676,5 +684,6 @@ a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
   }
 
   .hero { padding: 3rem 0 2.5rem; }
+  .hero-mascot { width: min(100%, 11.5rem); margin-bottom: 1.1rem; }
   .logo { font-size: 0.92rem; letter-spacing: 0.32em; }
 }

@@ -171,6 +171,9 @@
     if (cfg.hero.image) {
       upsertLink('preload', cfg.hero.image, { as: 'image' });
     }
+    if (cfg.hero.mascot) {
+      upsertLink('preload', cfg.hero.mascot, { as: 'image' });
+    }
     const media = window.BVLLY?.mediaSlot({
       name: brand.name,
       kicker: 'Beware Hood',
@@ -178,9 +181,14 @@
       fit: cfg.hero.fit || 'contain'
     }, 'hero-media');
 
+    const mascot = cfg.hero.mascot
+      ? `<img class="hero-mascot" src="${cfg.hero.mascot}" alt="" width="864" height="570" decoding="async">`
+      : '';
+
     el.innerHTML = `
       <div class="container hero-grid">
         <div>
+          ${mascot}
           ${cfg.hero.kicker ? `<p class="hero-kicker">${cfg.hero.kicker}</p>` : ''}
           <h1>${cfg.hero.headline}</h1>
           <p class="lead">${cfg.hero.subhead}</p>
