@@ -7,7 +7,7 @@
  */
 (function () {
   // Bump when lookbook JPGs change so browsers skip stale CDN/disk cache.
-  const ASSET_V = '20260922l';
+  const ASSET_V = '20260922p';
 
   const COLORWAYS = [
     { name: 'Pink', slug: 'pink', hex: '#e5b3c5' },
@@ -47,7 +47,7 @@
       subhead: 'Oversized heavyweight streetwear. The exotic bully — compact, stubborn, unhurried — is the stance behind the cut, the gothic print, and the 1×1″ embroidered mark.',
       mascot: asset('images/brand/bully-mascot.png'),
       image: asset('images/lookbook/hero-mark-hood.jpg'),
-      fit: 'cover',
+      fit: 'contain',
       ctaPrimary: { label: 'Shop the drop', href: 'shop.html' },
       ctaSecondary: { label: 'The mark', href: 'about.html' }
     },
@@ -60,7 +60,7 @@
         'Every piece runs in pink and black — cut oversized. Checkout is not live yet; join the list if you want a size.'
       ],
       image: worn('mark-tee', 'black'),
-      fit: 'cover'
+      fit: 'contain'
     },
     collections: [
       {
@@ -100,7 +100,7 @@
         ],
         description: 'Matching black sweatsuit — oversized heavyweight crew + tapered pant, one set. Chest: large silver interlocking BB. Pant: matching BB on the upper thigh, thick rib waistband with black cords and polished silver aglets, outer ankle zip that flares over sneakers. Matte heavyweight fleece. Black.',
         image: worn('bb-sweatsuit', 'black'),
-        fit: 'cover',
+        fit: 'contain',
         featured: true
       },
       {
@@ -115,7 +115,7 @@
         ],
         description: 'Oversized heavyweight pullover. Front: “Bully BEWARE!” in distressed blackletter. Back: “Never-mind the dog, beware the owner.” Drop shoulder, thick hood, rib that holds. Pink and black.',
         image: worn('beware-hood', 'black'),
-        fit: 'cover',
+        fit: 'contain',
         featured: true
       },
       {
@@ -127,7 +127,7 @@
         colors: wornColors('beware-tee'),
         description: 'Heavyweight oversized tee with the same chest print as the hood — “Bully BEWARE!” in distressed gothic type. Pink and black.',
         image: worn('beware-tee', 'black'),
-        fit: 'cover',
+        fit: 'contain',
         featured: true
       },
       {
@@ -139,7 +139,7 @@
         colors: wornColors('mark-tee'),
         description: 'Heavyweight crew. Micro ~1×1″ embroidered exotic bulldog on the left chest — quiet, not a chest print. No slogan. Pink and black.',
         image: worn('mark-tee', 'black'),
-        fit: 'cover',
+        fit: 'contain',
         featured: true
       },
       {
@@ -153,7 +153,7 @@
         ],
         description: 'Matching athletic zip set — long-sleeve full-zip hooded jacket + slim tapered jogger, one SKU. High zip neck, angled zippered hand pockets, technical matte fleece. Quiet Mark: micro ~1×1″ embroidered exotic bulldog on the left chest and matching micro Mark on the left upper thigh. No slogan. Black.',
         image: worn('mark-hood', 'black'),
-        fit: 'cover',
+        fit: 'contain',
         featured: true
       },
       {
@@ -168,7 +168,7 @@
         ],
         description: 'Athletic mid-thigh shorts in matte jersey. Elastic waist with drawstring, side welt pockets. Micro ~1×1″ embroidered exotic bulldog above the left hem — quiet Mark placement, not a thigh print. Graphite and black.',
         image: worn('mark-shorts', 'graphite'),
-        fit: 'cover',
+        fit: 'contain',
         featured: true
       },
       {
@@ -178,9 +178,9 @@
         price: 38,
         sizes: ['One size'],
         colors: wornColors('mark-cap'),
-        description: 'Structured cap. Micro ~1×1″ embroidered exotic bulldog centered on the front panel. Pink and black.',
+        description: 'Structured cap. Micro ~1×1″ embroidered exotic bulldog on the side panel. Pink and black.',
         image: worn('mark-cap', 'black'),
-        fit: 'cover',
+        fit: 'contain',
         featured: false
       }
     ],

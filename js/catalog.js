@@ -51,7 +51,7 @@
     const name = item.name || '';
     const kicker = item.kicker || collectionName(item.collection || '') || 'BVLLY';
     const src = srcOverride || item.image || '';
-    const studio = (item.fit || '') === 'contain' ? ' is-studio' : '';
+    const studio = ' is-studio';
     const cls = `media-slot ${extraClass || ''}${studio}`.trim();
     const eager = (extraClass || '').includes('hero-media') || (extraClass || '').includes('product-hero');
     const img = src
@@ -60,7 +60,7 @@
     return `
       <div class="${cls}${src ? '' : ' is-empty'}">
         ${img}
-        <div class="media-fallback">
+        <div class="media-fallback" aria-hidden="true">
           <span class="media-kicker">${kicker}</span>
           <span class="media-title">${name}</span>
           <span class="media-note">Photo coming</span>
@@ -71,13 +71,21 @@
   function bindPhotoSlots(root) {
     (root || document).querySelectorAll('[data-try-photo]').forEach((img) => {
       const slot = img.closest('.media-slot');
-      const mark = () => {
+      const markOk = () => {
+        slot?.classList.add('has-photo');
+        slot?.classList.remove('is-empty');
+      };
+      const markFail = () => {
         img.remove();
+        slot?.classList.remove('has-photo');
         slot?.classList.add('is-empty');
       };
-      img.addEventListener('error', mark);
-      img.addEventListener('load', () => slot?.classList.add('has-photo'));
-      if (img.complete && img.naturalWidth) slot?.classList.add('has-photo');
+      img.addEventListener('error', markFail);
+      img.addEventListener('load', markOk);
+      if (img.complete) {
+        if (img.naturalWidth) markOk();
+        else markFail();
+      }
     });
   }
 
@@ -92,7 +100,7 @@
   }
 
   function productCard(p) {
-    const preview = { ...p, fit: 'cover' };
+    const preview = { ...p, fit: 'contain' };
     return `
       <a class="product-card" href="product.html?id=${encodeURIComponent(p.id)}">
         ${mediaSlot(preview)}
@@ -210,7 +218,7 @@
           const color = way?.slug || (src.includes('-back') ? (ways[0]?.slug || '') : '');
           return `
           <button type="button" class="thumb ${active}" data-src="${src}" data-color="${color}" aria-label="${label}">
-            <img src="${src}" alt="${product.name} ${label}">
+            <img src="${src}" alt="${product.name} ${label}" width="160" height="160" loading="lazy" decoding="async">
           </button>`;
         }).join('')}</div>`
       : '';
@@ -220,7 +228,7 @@
     el.innerHTML = `
       <div class="product-layout">
         <div class="product-gallery">
-          ${mediaSlot({ ...product, fit: 'cover' }, 'product-hero', activeSrc)}
+          ${mediaSlot({ ...product, fit: 'contain' }, 'product-hero', activeSrc)}
           ${thumbs}
         </div>
         <div class="product-copy">
