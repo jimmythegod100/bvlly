@@ -38,7 +38,7 @@
       kicker: '',
       headline: 'Built from the breed.',
       subhead: 'Oversized heavyweight streetwear. The exotic bully — compact, stubborn, unhurried — is the stance behind the cut, the gothic print, and the 1×1″ embroidered mark.',
-      image: worn('beware-hood', 'black'),
+      image: 'images/lookbook/hero-mark-hood.jpg',
       fit: 'cover',
       ctaPrimary: { label: 'Shop the drop', href: 'shop.html' },
       ctaSecondary: { label: 'The mark', href: 'about.html' }
