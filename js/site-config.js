@@ -67,6 +67,11 @@
         tagline: 'Micro ~1×1″ embroidered bully. Left chest. Pink and black.'
       },
       {
+        id: 'monogram',
+        name: 'Monogram',
+        tagline: 'Interlocking BB on the chest. Black.'
+      },
+      {
         id: 'sets',
         name: 'Sets',
         tagline: 'Matching crew + pant. One SKU.'
@@ -91,8 +96,23 @@
           'images/lookbook/bb-sweatsuit-black-thigh.jpg',
           'images/lookbook/bb-sweatsuit-black-ankle.jpg'
         ],
-        description: 'Matching black sweatsuit — oversized heavyweight crew + tapered pant, one set. Chest: large silver interlocking BB. Pant: matching BB on the upper thigh, thick rib waistband with black cords and polished silver aglets, outer ankle zip that flares over sneakers. Matte heavyweight fleece. Black.',
+        description: 'Matching black sweatsuit — oversized heavyweight crew + tapered pant, one set. Chest: large silver interlocking BB. Pant: matching BB on the upper thigh, thick rib waistband with black cords and polished silver aglets, outer ankle zip that flares over sneakers. Same matte fleece language as the BB Crew. Black.',
         image: worn('bb-sweatsuit', 'black'),
+        fit: 'cover',
+        featured: true
+      },
+      {
+        id: 'bb-crew',
+        name: 'BB Crew',
+        collection: 'monogram',
+        price: 98,
+        sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+        colors: [
+          { name: 'Black', slug: 'black', hex: '#111111', image: worn('bb-crew', 'black') }
+        ],
+        views: ['images/lookbook/bb-crew-black-back.jpg'],
+        description: 'Oversized heavyweight crewneck. Front: a large silver interlocking BB. Back: a micro ~1×1″ embroidered exotic bulldog (tan/black Mark stitch) high on the nape/yoke — centered, just below the collar seam. Black.',
+        image: worn('bb-crew', 'black'),
         fit: 'cover',
         featured: true
       },
