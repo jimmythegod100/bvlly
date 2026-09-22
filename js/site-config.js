@@ -7,7 +7,7 @@
  */
 (function () {
   // Bump when lookbook JPGs change so browsers skip stale CDN/disk cache.
-  const ASSET_V = '20260922g';
+  const ASSET_V = '20260922h';
 
   const COLORWAYS = [
     { name: 'Pink', slug: 'pink', hex: '#e5b3c5' },
@@ -76,7 +76,7 @@
       {
         id: 'sets',
         name: 'Sets',
-        tagline: 'Matching crew + pant. One SKU.'
+        tagline: 'Matching tops + pants. One SKU.'
       },
       {
         id: 'accessories',
@@ -144,12 +144,12 @@
       },
       {
         id: 'mark-hood',
-        name: 'Mark Hood',
-        collection: 'mark',
-        price: 118,
+        name: 'Mark Zip Set',
+        collection: 'sets',
+        price: 168,
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
         colors: wornColors('mark-hood'),
-        description: 'Oversized hoodie. No chest slogan — just a micro ~1×1″ embroidered mark on the left chest. Pink and black.',
+        description: 'Matching athletic zip set — long-sleeve full-zip hooded jacket + slim tapered jogger, one SKU. High zip neck, angled zippered hand pockets, technical matte fleece. Quiet Mark: micro ~1×1″ embroidered exotic bulldog on the left chest only. No slogan. Pink and black.',
         image: worn('mark-hood', 'black'),
         fit: 'cover',
         featured: true
