@@ -203,7 +203,7 @@
     }
     const media = window.BVLLY?.mediaSlot({
       name: brand.name,
-      kicker: 'Beware Hood',
+      kicker: 'Mark Tee',
       image: cfg.hero.image,
       fit: cfg.hero.fit || 'contain'
     }, 'hero-media');
