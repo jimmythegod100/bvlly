@@ -334,7 +334,16 @@
 
     const colorSelect = document.querySelector('[name="color"]');
     if (colorSelect) {
-      const colors = ['', 'Pink', 'Black'];
+      const seen = new Set();
+      const colors = [''];
+      (cfg.products || []).forEach((p) => {
+        colorways(p).forEach((c) => {
+          if (c.name && !seen.has(c.name)) {
+            seen.add(c.name);
+            colors.push(c.name);
+          }
+        });
+      });
       colorSelect.innerHTML = colors.map((c) => {
         const label = c || 'Not sure yet';
         const selected = c && c.toLowerCase() === color.toLowerCase() ? 'selected' : '';
