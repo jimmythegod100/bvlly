@@ -7,7 +7,7 @@
  */
 (function () {
   // Bump when lookbook JPGs change so browsers skip stale CDN/disk cache.
-  const ASSET_V = '20260923m';
+  const ASSET_V = '20260923n';
 
   const COLORWAYS = [
     { name: 'Pink', slug: 'pink', hex: '#e5b3c5' },
