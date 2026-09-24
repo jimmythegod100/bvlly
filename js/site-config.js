@@ -7,7 +7,7 @@
  */
 (function () {
   // Bump when lookbook JPGs change so browsers skip stale CDN/disk cache.
-  const ASSET_V = '20260924c';
+  const ASSET_V = '20260924d';
 
   const COLORWAYS = [
     { name: 'Pink', slug: 'pink', hex: '#e5b3c5' },
@@ -165,7 +165,7 @@
           { name: 'Black', slug: 'black', hex: '#111111', image: worn('mark-shorts', 'black') }
         ],
         description: 'Athletic mid-thigh shorts in matte jersey. Elastic waist with drawstring, side welt pockets. Micro ~1×1″ embroidered exotic bulldog above the left hem — quiet Mark placement, not a thigh print. Graphite and black.',
-        image: worn('mark-shorts', 'graphite'),
+        image: worn('mark-shorts', 'black'),
         fit: 'cover',
         featured: true
       },
