@@ -11,3 +11,6 @@ _site/
 .tmp-edit/
 .tmp-live/
 .venv-img/
+||||||| 8eb509c
+# local audit dumps (archived under ~/Archives)
+tmp/

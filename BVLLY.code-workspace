@@ -1,0 +1,13 @@
+{
+  "folders": [
+    { "name": "BVLLY website", "path": "." },
+    { "name": "BVLLY workflow docs", "path": "docs/workflow" }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.tmp-edit": true,
+      "**/.tmp-live": true,
+      "**/tmp": true
+    }
+  }
+}
