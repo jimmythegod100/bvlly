@@ -47,6 +47,41 @@ Same looks from `wix-product-mocks/` (1200×1600), prefixed `wix-`:
 
 `wix-bb-sweatsuit-black.jpg`, `wix-bb-sweatsuit-black-ankle.jpg`, `wix-bb-sweatsuit-black-back.jpg`, `wix-bb-sweatsuit-black-thigh.jpg`, `wix-beware-hood-black.jpg`, `wix-beware-hood-pink.jpg`, `wix-beware-tee-black.jpg`, `wix-beware-tee-pink.jpg`, `wix-mark-cap-black.jpg`, `wix-mark-cap-pink.jpg`, `wix-mark-hood-black.jpg`, `wix-mark-hood-pink.jpg`, `wix-mark-shorts-black.jpg`, `wix-mark-shorts-graphite.jpg`, `wix-mark-tee-black.jpg`, `wix-mark-tee-pink.jpg`
 
-**Total: 48** images.
+## Diverse extras (`extra/`) — 26
+
+New logo-free worn shots generated for casting / mock diversity. Naming: `{garment}-{color}-{desc}.jpg`. Blank garments only (no BVLLY marks). Vision-reviewed for plastic faces, warped hands, and accidental logos.
+
+| File | Garment / notes |
+|------|-----------------|
+| `bb-sweatsuit-black-man-white.jpg` | BB crew set |
+| `bb-sweatsuit-black-woman-east-asian.jpg` | |
+| `bb-sweatsuit-black-woman-latina.jpg` | |
+| `beware-hood-black-man-mixed.jpg` | Beware pullover |
+| `beware-hood-electric-blue-man-black.jpg` | |
+| `beware-hood-pink-woman-latina.jpg` | |
+| `beware-tee-army-green-woman-south-asian.jpg` | Beware tee |
+| `beware-tee-black-man-mixed.jpg` | |
+| `beware-tee-black-woman-middle-eastern.jpg` | |
+| `beware-tee-pink-man-white.jpg` | |
+| `mark-cap-beige-woman-latina.jpg` | Mark cap |
+| `mark-cap-black-man-east-asian.jpg` | |
+| `mark-cap-pink-woman-mixed.jpg` | |
+| `mark-hood-beige-woman-southeast-asian.jpg` | Mark zip set |
+| `mark-hood-black-man-black.jpg` | |
+| `mark-hood-black-woman-black.jpg` | |
+| `mark-hood-electric-blue-man-middle-eastern.jpg` | |
+| `mark-hood-pink-woman-white.jpg` | |
+| `mark-shorts-black-man-latino.jpg` | Mark shorts |
+| `mark-shorts-graphite-woman-black.jpg` | |
+| `mark-tee-army-green-woman-latina.jpg` | Mark tee |
+| `mark-tee-beige-man-south-asian.jpg` | |
+| `mark-tee-black-man-southeast-asian.jpg` | |
+| `mark-tee-black-woman-black.jpg` | |
+| `mark-tee-pink-androgynous-mixed.jpg` | Androgynous / non-binary presentation |
+| `mark-tee-pink-woman-east-asian.jpg` | |
+
+**Coverage:** men & women; Black, White, East/South/Southeast Asian, Latino/Hispanic, Middle Eastern, mixed; one androgynous presentation. Garments: mark tee/hood/shorts/cap, beware tee/hood, bb sweatsuit — colorways aligned with lookbook / blank-garments where useful.
+
+**Totals:** 48 original + **26** extras = **74** images.
 
 Do not use as live shop catalog unless intentionally swapping product art. Live site assets / `ASSET_V` unchanged.
