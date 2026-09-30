@@ -13,3 +13,4 @@ _site/
 .tmp-live/
 tmp/
 .venv-img/
+.venv-blank/
