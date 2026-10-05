@@ -40,6 +40,31 @@ JOBS: list[tuple[str, str, str, str | None]] = [
     ("BF440AFF", "bully-beware-stone-texture-alt", "white_bg_texture", None),
 ]
 
+TEXTURED_STEMS = {
+    "never-mind-dog-owner-camo",
+    "never-mind-dog-owner-stone-texture",
+    "never-mind-dog-owner-metallic-stone",
+    "never-mind-dog-owner-stone-distressed",
+    "bully-beware-stone-texture",
+    "bully-beware-stone-texture-alt",
+}
+
+POTRACE_FILL = {
+    "never-mind-dog-owner-black": "#000000",
+    "never-mind-dog-owner-black-distressed": "#000000",
+    "never-mind-dog-owner-white": "#ffffff",
+    "never-mind-dog-owner-white-distressed": "#ffffff",
+    "never-mind-dog-owner-cream": "#F4EFE6",
+    "never-mind-dog-owner-cream-distressed": "#F4EFE6",
+    "never-mind-dog-owner-light-gray-distressed": "#C8C8C8",
+    "bully-beware-black": "#000000",
+    "bully-beware-black-alt": "#000000",
+    "bully-beware-black-distressed": "#000000",
+    "bully-beware-white-distressed": "#ffffff",
+    "bully-beware-cream-distressed": "#F4EFE6",
+    "bully-beware-tan": "#C4A478",
+}
+
 
 def resolve_src(prefix: str) -> Path:
     matches = sorted(ASSETS.glob(f"{prefix}*"))
@@ -191,19 +216,13 @@ def make_alpha_white_bg_texture(rgb):
     return (alpha * 255).astype(np.uint8)
 
 
-def remove_isolated_speckles(png, min_area: int = 220):
-    """Drop tiny opaque blobs disconnected from letterforms (alpha >= 128)."""
+def _label_opaque_components(binary):
     import numpy as np
-    from PIL import Image
 
-    arr = np.array(png.convert("RGBA"))
-    alpha = arr[..., 3]
-    binary = alpha >= 128
     h, w = binary.shape
     labels = np.zeros((h, w), dtype=np.int32)
     label = 0
     sizes: dict[int, int] = {}
-
     for y in range(h):
         for x in range(w):
             if not binary[y, x] or labels[y, x]:
@@ -226,6 +245,18 @@ def remove_isolated_speckles(png, min_area: int = 220):
                         labels[ny, nx] = label
                         stack.append((ny, nx))
             sizes[label] = n
+    return labels, sizes
+
+
+def remove_isolated_speckles(png, min_area: int = 220):
+    """Drop tiny opaque blobs disconnected from letterforms (alpha >= 128)."""
+    import numpy as np
+    from PIL import Image
+
+    arr = np.array(png.convert("RGBA"))
+    alpha = arr[..., 3]
+    binary = alpha >= 128
+    labels, sizes = _label_opaque_components(binary)
 
     kill = {lid for lid, sz in sizes.items() if sz < min_area}
     if not kill:
@@ -235,6 +266,118 @@ def remove_isolated_speckles(png, min_area: int = 220):
     alpha[mask] = 0
     arr[..., 3] = alpha
     return Image.fromarray(arr, "RGBA"), len(kill), removed_px
+
+
+def clean_flat_print_png(png, min_area: int = 220):
+    """Flat single-color inks: drop dust outside glyphs, keep distress holes."""
+    png, n_comp, n_px = remove_isolated_speckles(png, min_area=min_area)
+    png, n_bbox = clear_alpha_outside_letter_bbox(png, pad=18)
+    png, n_faint = remove_faint_detached_fringe(png, dilate_iters=4)
+    return png, {
+        "speckle_comps": n_comp,
+        "speckle_px": n_px,
+        "bbox_px": n_bbox,
+        "faint_px": n_faint,
+    }
+
+
+def clean_textured_print_png(
+    png,
+    min_component: int = 900,
+    top_n: int = 35,
+    pad: int = 56,
+    shadow_pad: int = 18,
+):
+    """Camo/stone: trim margin JPEG dust; keep internal texture grains."""
+    import numpy as np
+    from PIL import Image
+
+    arr = np.array(png.convert("RGBA"))
+    alpha = arr[..., 3].copy()
+    binary = alpha >= 128
+    labels, sizes = _label_opaque_components(binary)
+    if not sizes:
+        return png, {"outside_px": 0, "faint_px": 0}
+
+    ranked = sorted(sizes.items(), key=lambda kv: kv[1], reverse=True)
+    keep = {lid for lid, sz in ranked if sz >= min_component}
+    for lid, _ in ranked[:top_n]:
+        keep.add(lid)
+    letter_mask = np.isin(labels, list(keep))
+    ink_zone = _dilate_max(letter_mask, iterations=16)
+    h, w = alpha.shape
+    ys, xs = np.where(ink_zone)
+    y0, y1 = int(ys.min()), int(ys.max())
+    x0, x1 = int(xs.min()), int(xs.max())
+    y0 = max(0, y0 - pad)
+    x0 = max(0, x0 - pad)
+    y1 = min(h - 1, y1 + pad)
+    x1 = min(w - 1, x1 + pad)
+    in_canvas = np.zeros_like(alpha, dtype=bool)
+    in_canvas[y0 : y1 + 1, x0 : x1 + 1] = True
+    drop = (~ink_zone & (alpha > 0)) | (~in_canvas & (alpha > 0))
+    removed_out = int(drop.sum())
+    alpha[drop] = 0
+    ys_c, _ = np.where(letter_mask)
+    y0c, y1c = int(ys_c.min()), int(ys_c.max())
+    vert_drop = ((np.arange(h)[:, None] < y0c - 14) | (np.arange(h)[:, None] > y1c + shadow_pad)) & (
+        alpha > 0
+    )
+    removed_out += int(vert_drop.sum())
+    alpha[vert_drop] = 0
+    arr[..., 3] = alpha
+    # Drop small opaque islands not part of major letter chunks (camo JPEG dust).
+    binary2 = alpha >= 128
+    labels2, sizes2 = _label_opaque_components(binary2)
+    small_orphans = {lid for lid, sz in sizes2.items() if lid not in keep and sz < 380}
+    if small_orphans:
+        orphan_mask = np.isin(labels2, list(small_orphans))
+        removed_out += int(orphan_mask.sum())
+        alpha[orphan_mask] = 0
+        arr[..., 3] = alpha
+    png = Image.fromarray(arr, "RGBA")
+    png, n_faint = remove_faint_detached_fringe(png, dilate_iters=5)
+    return png, {"outside_px": removed_out, "faint_px": n_faint}
+
+
+def svg_for_png(stem: str, png_path: Path, png) -> str:
+    title = stem.replace("-", " ")
+    if stem in TEXTURED_STEMS:
+        return embedded_svg(png_path, png.width, png.height, title)
+    import numpy as np
+
+    arr = np.array(png)
+    measured = cv.estimate_ink_color(arr[..., :3], arr[..., 3])
+    fill = POTRACE_FILL.get(stem, cv.rgb_to_hex(measured))
+    if fill == "#C4A478" and measured[0] > 100:
+        fill = cv.rgb_to_hex(measured)
+    elif fill == "#F4EFE6" and sum(measured) > 400:
+        fill = cv.rgb_to_hex(measured)
+    elif fill == "#C8C8C8":
+        fill = cv.rgb_to_hex(measured)
+    return cv.potrace_svg(png, fill, title)
+
+
+def clean_all_print_assets() -> list[tuple[str, dict, bool]]:
+    """Clean every PNG in OUT and refresh matching SVG."""
+    import numpy as np
+    from PIL import Image
+
+    report: list[tuple[str, dict, bool]] = []
+    for png_path in sorted(OUT.glob("*.png")):
+        stem = png_path.stem
+        before = Image.open(png_path)
+        if stem in TEXTURED_STEMS:
+            sp = 88 if "stone" in stem else 18
+            cleaned, stats = clean_textured_print_png(before, shadow_pad=sp)
+        else:
+            cleaned, stats = clean_flat_print_png(before)
+        changed = np.array(before)[..., 3].sum() != np.array(cleaned)[..., 3].sum()
+        cleaned.save(png_path, "PNG", optimize=True)
+        svg_path = OUT / f"{stem}.svg"
+        svg_path.write_text(svg_for_png(stem, png_path, cleaned))
+        report.append((stem, stats, changed))
+    return report
 
 
 def remove_faint_detached_fringe(png, dilate_iters: int = 4):
@@ -362,10 +505,8 @@ def build_png_from_rgb(rgb, mode: str, fill_hex: str | None):
         y1 = min(out.height, y1 + pad)
         out = out.crop((x0, y0, x1, y1))
     out = cv.upscale_nearest(out)
-    if fill_hex == "#FFFFFF" and mode == "light_ink":
-        out, _, _ = remove_isolated_speckles(out, min_area=220)
-        out, _ = clear_alpha_outside_letter_bbox(out, pad=18)
-        out, _ = remove_faint_detached_fringe(out, dilate_iters=4)
+    if mode in ("light_ink", "dark_ink", "tan"):
+        out, _ = clean_flat_print_png(out, min_area=220)
     return out
 
 
@@ -465,4 +606,12 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1 and sys.argv[1] == "clean":
+        results = clean_all_print_assets()
+        changed_n = sum(1 for _, _, ch in results if ch)
+        print(f"Cleaned {len(results)} PNG/SVG pairs ({changed_n} modified)")
+        for stem, stats, ch in results:
+            flag = "updated" if ch else "unchanged"
+            print(f"  {stem}: {flag} {stats}")
+    else:
+        main()
