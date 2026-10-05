@@ -37,4 +37,8 @@ Print-ready transparent PNG (2400px wide) + SVG pairs derived from the Oct 2025 
 2. Camo / stone textures: keyed RGBA → **self-contained SVG** with embedded PNG (preserves texture).
 3. White-background stone PNGs: white keyed + embedded SVG.
 
-Regenerate: `python3 process_logos.py` (requires Pillow, ImageMagick `magick`, `potrace`).
+Regenerate from sources: `python3 process_logos.py` (Pillow, ImageMagick `magick`, `potrace`).
+
+Re-run dust/speckle cleanup on all exports: `python3 process_logos.py clean` (refreshes every PNG + matching SVG).
+
+**Crisp solid flats** (white/black/cream/tan — not distressed): `python3 process_logos.py crisp` re-keys at native resolution, potrace (`-t 5 -O 0.1 -a 0.85`), then renders PNG at 2400px from the SVG via ImageMagick (512 DPI).

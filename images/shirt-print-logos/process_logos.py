@@ -49,6 +49,17 @@ TEXTURED_STEMS = {
     "bully-beware-stone-texture-alt",
 }
 
+CRISP_FLAT_STEMS = {
+    "never-mind-dog-owner-white",
+    "never-mind-dog-owner-black",
+    "never-mind-dog-owner-cream",
+    "bully-beware-black",
+    "bully-beware-black-alt",
+    "bully-beware-tan",
+}
+
+TARGET_EXPORT_W = 2400
+
 POTRACE_FILL = {
     "never-mind-dog-owner-black": "#000000",
     "never-mind-dog-owner-black-distressed": "#000000",
@@ -340,6 +351,148 @@ def clean_textured_print_png(
     return png, {"outside_px": removed_out, "faint_px": n_faint}
 
 
+def hard_matte_rgba(png):
+    """Binary alpha — no semi-transparent fringe before vector trace."""
+    import numpy as np
+    from PIL import Image
+
+    arr = np.array(png.convert("RGBA"))
+    a = arr[..., 3]
+    arr[..., 3] = np.where(a >= 128, 255, 0).astype(np.uint8)
+    r, g, b = arr[..., 0], arr[..., 1], arr[..., 2]
+    ink = arr[..., 3] == 255
+    arr[..., 0] = np.where(ink, r, 0)
+    arr[..., 1] = np.where(ink, g, 0)
+    arr[..., 2] = np.where(ink, b, 0)
+    return Image.fromarray(arr, "RGBA")
+
+
+def potrace_crisp_svg(png, fill_hex: str, title: str) -> str:
+    """High-quality potrace for solid flat inks (sharp blackletter corners)."""
+    import re
+    import numpy as np
+    from PIL import Image
+
+    alpha = np.array(png.split()[-1])
+    mask = (alpha >= 128).astype(np.uint8) * 255
+    bmp = Image.fromarray(mask, "L")
+
+    with tempfile.TemporaryDirectory() as td:
+        td = Path(td)
+        pbm2 = td / "mask.pbm"
+        svg_out = td / "out.svg"
+        tmp = td / "mask.png"
+        bmp.save(tmp)
+        subprocess.run(
+            ["magick", str(tmp), "-threshold", "50%", "-negate", str(pbm2)],
+            check=True,
+        )
+        subprocess.run(
+            [
+                "potrace",
+                str(pbm2),
+                "-s",
+                "-o",
+                str(svg_out),
+                "--flat",
+                "-t",
+                "5",
+                "-O",
+                "0.1",
+                "-a",
+                "0.85",
+            ],
+            check=True,
+        )
+        svg = svg_out.read_text()
+
+    svg = re.sub(r'fill="#?[0-9a-fA-F]*"', f'fill="{fill_hex}"', svg, count=1)
+    if f'fill="{fill_hex}"' not in svg:
+        svg = re.sub(
+            r'(<g[^>]*\sfill=")([^"]*)(")',
+            rf"\g<1>{fill_hex}\3",
+            svg,
+            count=1,
+        )
+    if "<title>" not in svg:
+        svg = re.sub(r"(<svg[^>]*>)", rf'\1\n<title>{title}</title>\n', svg, count=1)
+    return svg
+
+
+def rasterize_svg_to_png(svg_path: Path, png_path: Path, width: int = TARGET_EXPORT_W) -> None:
+    # High-density ImageMagick render → smoother curves than low-res upscaled raster trace.
+    subprocess.run(
+        [
+            "magick",
+            "-background",
+            "none",
+            "-density",
+            "512",
+            str(svg_path),
+            "-resize",
+            f"{width}x",
+            str(png_path),
+        ],
+        check=True,
+    )
+
+
+def job_for_stem(stem: str) -> tuple[str, str, str | None]:
+    for prefix, out_stem, mode, fill_hex in JOBS:
+        if out_stem == stem:
+            return prefix, mode, fill_hex
+    raise KeyError(stem)
+
+
+def export_crisp_flat_from_source(stem: str) -> None:
+    """Re-key at native resolution → potrace → rsvg PNG (crisp edges)."""
+    from PIL import Image
+
+    prefix, mode, fill_hex = job_for_stem(stem)
+    if stem not in CRISP_FLAT_STEMS:
+        raise ValueError(f"not a crisp flat stem: {stem}")
+    src = resolve_src(prefix)
+    rgb = load_rgb(src)
+    png = build_png_from_rgb(rgb, mode, fill_hex, upscale=False)
+    png = hard_matte_rgba(png)
+    png, _ = clean_flat_print_png(png, min_area=80)
+    png = hard_matte_rgba(png)
+
+    fill = POTRACE_FILL.get(stem, "#000000")
+    if fill == "#F4EFE6":
+        import numpy as np
+
+        arr = np.array(png)
+        measured = cv.estimate_ink_color(arr[..., :3], arr[..., 3])
+        if sum(measured) > 400:
+            fill = cv.rgb_to_hex(measured)
+    if fill == "#C4A478":
+        import numpy as np
+
+        arr = np.array(png)
+        measured = cv.estimate_ink_color(arr[..., :3], arr[..., 3])
+        if measured[0] > 100:
+            fill = cv.rgb_to_hex(measured)
+
+    title = stem.replace("-", " ")
+    svg = potrace_crisp_svg(png, fill, title)
+    svg_path = OUT / f"{stem}.svg"
+    png_path = OUT / f"{stem}.png"
+    svg_path.write_text(svg)
+    rasterize_svg_to_png(svg_path, png_path, TARGET_EXPORT_W)
+    png = Image.open(png_path)
+    png, _ = clear_alpha_outside_letter_bbox(png, pad=16)
+    png.save(png_path, "PNG", optimize=True)
+
+
+def export_all_crisp_flats() -> list[str]:
+    done = []
+    for stem in sorted(CRISP_FLAT_STEMS):
+        export_crisp_flat_from_source(stem)
+        done.append(stem)
+    return done
+
+
 def svg_for_png(stem: str, png_path: Path, png) -> str:
     title = stem.replace("-", " ")
     if stem in TEXTURED_STEMS:
@@ -447,7 +600,7 @@ def scrub_checker_artifacts(rgb, alpha, mode: str):
     return (np.clip(a, 0, 255)).astype(np.uint8)
 
 
-def build_png_from_rgb(rgb, mode: str, fill_hex: str | None):
+def build_png_from_rgb(rgb, mode: str, fill_hex: str | None, upscale: bool = True):
     import numpy as np
     from PIL import Image
 
@@ -504,9 +657,13 @@ def build_png_from_rgb(rgb, mode: str, fill_hex: str | None):
         x1 = min(out.width, x1 + pad)
         y1 = min(out.height, y1 + pad)
         out = out.crop((x0, y0, x1, y1))
-    out = cv.upscale_nearest(out)
+    if upscale:
+        out = cv.upscale_nearest(out)
+        speckle_min = 220
+    else:
+        speckle_min = 80
     if mode in ("light_ink", "dark_ink", "tan"):
-        out, _ = clean_flat_print_png(out, min_area=220)
+        out, _ = clean_flat_print_png(out, min_area=speckle_min)
     return out
 
 
@@ -613,5 +770,11 @@ if __name__ == "__main__":
         for stem, stats, ch in results:
             flag = "updated" if ch else "unchanged"
             print(f"  {stem}: {flag} {stats}")
+    elif len(sys.argv) > 1 and sys.argv[1] == "crisp":
+        stems = sys.argv[2:] if len(sys.argv) > 2 else sorted(CRISP_FLAT_STEMS)
+        for stem in stems:
+            print(f"→ crisp export {stem}")
+            export_crisp_flat_from_source(stem)
+        print(f"Done {len(stems)} crisp flat export(s)")
     else:
         main()
