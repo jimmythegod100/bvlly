@@ -1,0 +1,376 @@
+#!/usr/bin/env python3
+"""Process BVLLY shirt-print logo sources → transparent PNG + SVG."""
+
+from __future__ import annotations
+
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+# Reuse keyed alpha + potrace pipeline from logos folder
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "logos"))
+import _convert_logo_variants as cv  # noqa: E402
+
+ASSETS = Path("/Users/orcus/.cursor/projects/Users-orcus-Projects-bvlly/assets")
+OUT = Path(__file__).resolve().parent
+
+# (source basename prefix, output stem, mode, fill_hex or None)
+JOBS: list[tuple[str, str, str, str | None]] = [
+    # NEVER MIND THE DOG, BEWARE THE OWNER
+    ("IMG_7886", "never-mind-dog-owner-camo", "camo", None),
+    ("IMG_7885", "never-mind-dog-owner-cream", "light_ink", "#F4EFE6"),
+    ("IMG_7884", "never-mind-dog-owner-white", "light_ink", "#FFFFFF"),
+    ("IMG_7883", "never-mind-dog-owner-black", "dark_ink", "#000000"),
+    ("IMG_7882", "never-mind-dog-owner-light-gray-distressed", "light_ink", "#C8C8C8"),
+    ("IMG_7880", "never-mind-dog-owner-black-distressed", "dark_ink", "#000000"),
+    ("IMG_7879", "never-mind-dog-owner-cream-distressed", "light_ink", "#F4EFE6"),
+    ("IMG_7881", "never-mind-dog-owner-white-distressed", "light_ink", "#FFFFFF"),
+    ("IMG_7887", "never-mind-dog-owner-stone-texture", "stone_texture", None),
+    ("IMG_7889", "never-mind-dog-owner-metallic-stone", "stone_texture", None),
+    ("IMG_7888", "never-mind-dog-owner-stone-distressed", "stone_texture", None),
+    # Bully BEWARE!
+    ("IMG_7878", "bully-beware-cream-distressed", "light_ink", "#F4EFE6"),
+    ("IMG_7877", "bully-beware-white-distressed", "light_ink", "#FFFFFF"),
+    ("IMG_7875", "bully-beware-tan", "tan", "#C4A478"),
+    ("IMG_7873", "bully-beware-black", "dark_ink", "#000000"),
+    ("IMG_7874", "bully-beware-black-alt", "dark_ink", "#000000"),
+    ("IMG_7876", "bully-beware-black-distressed", "dark_ink", "#000000"),
+    ("0DD75D64", "bully-beware-stone-texture", "white_bg_texture", None),
+    ("BF440AFF", "bully-beware-stone-texture-alt", "white_bg_texture", None),
+]
+
+
+def resolve_src(prefix: str) -> Path:
+    matches = sorted(ASSETS.glob(f"{prefix}*"))
+    if not matches:
+        raise FileNotFoundError(prefix)
+    return matches[0]
+
+
+def load_rgb(src: Path):
+    import numpy as np
+    from PIL import Image
+
+    im = Image.open(src)
+    if im.mode == "RGBA":
+        arr = np.array(im)
+        # Some exports ship with empty alpha; fall back to RGB composite on white
+        if arr[..., 3].max() < 8:
+            im = Image.open(src).convert("RGB")
+            return np.array(im)
+        rgb = arr[..., :3]
+        a = arr[..., 3]
+        # Premultiply-aware flatten for any partial alpha
+        bg = np.ones_like(rgb) * 255
+        rgb = (rgb * (a[..., None] / 255.0) + bg * (1 - a[..., None] / 255.0)).astype(
+            np.uint8
+        )
+        return rgb
+    return np.array(im.convert("RGB"))
+
+
+def _border_pixels(rgb, margin: int = 14):
+    import numpy as np
+
+    return np.concatenate(
+        [
+            rgb[:margin].reshape(-1, 3),
+            rgb[-margin:].reshape(-1, 3),
+            rgb[:, :margin].reshape(-1, 3),
+            rgb[:, -margin:].reshape(-1, 3),
+        ]
+    )
+
+
+def _checker_colors(rgb) -> tuple:
+    import numpy as np
+
+    pts = _border_pixels(rgb).astype(np.float32)
+    c1 = pts.mean(axis=0)
+    d = np.linalg.norm(pts - c1, axis=1)
+    far = pts[d >= np.median(d)]
+    c2 = far.mean(axis=0) if len(far) else c1
+    return c1, c2
+
+
+def _local_lum_std(lum):
+    import numpy as np
+
+    k = 9
+    pad = k // 2
+    lum_f = lum.astype(np.float32)
+    p = np.pad(lum_f, pad, mode="edge")
+    h, w = lum_f.shape
+    mean = np.zeros_like(lum_f)
+    mean_sq = np.zeros_like(lum_f)
+    for dy in range(k):
+        for dx in range(k):
+            sl = p[dy : dy + h, dx : dx + w]
+            mean += sl
+            mean_sq += sl * sl
+    mean /= k * k
+    mean_sq /= k * k
+    return np.sqrt(np.maximum(mean_sq - mean * mean, 0))
+
+
+def _checker_distance(rgb) -> tuple:
+    import numpy as np
+
+    c1, c2 = _checker_colors(rgb)
+    rgbf = rgb.astype(np.float32)
+    d1 = np.linalg.norm(rgbf - c1, axis=2)
+    d2 = np.linalg.norm(rgbf - c2, axis=2)
+    return np.minimum(d1, d2), c1, c2
+
+
+def _dilate_max(mask, iterations: int = 12):
+    import numpy as np
+
+    m = mask.astype(np.uint8)
+    for _ in range(iterations):
+        p = np.pad(m, 1, mode="constant")
+        m = np.maximum.reduce(
+            [p[0:-2, 0:-2], p[0:-2, 1:-1], p[0:-2, 2:], p[1:-1, 0:-2], p[1:-1, 1:-1], p[1:-1, 2:], p[2:, 0:-2], p[2:, 1:-1], p[2:, 2:]]
+        )
+    return m.astype(bool)
+
+
+def make_alpha_stone_texture(rgb):
+    """Grayscale stone/metal on checkerboard — seed + dilate, then key grid."""
+    import numpy as np
+
+    dmin, _, _ = _checker_distance(rgb)
+    lum = rgb.mean(axis=2).astype(np.float32)
+    ch = cv.chroma(rgb)
+    lstd = _local_lum_std(lum)
+    camo_seed = cv.make_alpha(rgb, "camo") >= 128
+    filled = _dilate_max(camo_seed, iterations=15)
+
+    flat_checker = (dmin < 20) & (lstd < 9) & (ch < 22)
+    alpha = filled & ~flat_checker
+    # Drop shadows (dark, attached to letters only)
+    shadow = (lum < 50) & (ch < 18) & _dilate_max(filled, iterations=4)
+    alpha = alpha | shadow
+    alpha = alpha.astype(np.float32)
+    fringe = (dmin < 24) & (lstd < 10) & (ch < 22) & (alpha > 0.5)
+    alpha = np.where(fringe, 0.0, alpha)
+    return (np.clip(alpha, 0, 1) * 255).astype(np.uint8)
+
+
+def make_alpha_camo(rgb) -> np.ndarray:
+    """Camo fill on checkerboard."""
+    import numpy as np
+
+    base = cv.make_alpha(rgb, "camo").astype(np.float32) / 255.0
+    dmin, _, _ = _checker_distance(rgb)
+    lum = rgb.mean(axis=2).astype(np.float32)
+    ch = cv.chroma(rgb)
+    lstd = _local_lum_std(lum)
+
+    flat_checker = (dmin < 26) & (ch < 34) & (lstd < 13)
+    is_camo = ch > 34
+    alpha = base.copy()
+    alpha = np.where(flat_checker & ~is_camo, 0.0, alpha)
+    alpha = np.where(is_camo, 1.0, alpha)
+    # Final scrub: any remaining flat checker cells
+    alpha = np.where(flat_checker & (alpha < 0.85), 0.0, alpha)
+    return (np.clip(alpha, 0, 1) * 255).astype(np.uint8)
+
+
+def make_alpha_white_bg_texture(rgb):
+    import numpy as np
+
+    lum = rgb.mean(axis=2).astype(np.float32)
+    ch = cv.chroma(rgb)
+    is_bg = (lum > 246) | ((lum > 238) & (ch < 10))
+    alpha = np.where(is_bg, 0.0, 1.0).astype(np.float32)
+    # Soft fringe
+    fringe = (lum > 230) & (lum <= 246) & (ch < 12)
+    alpha = np.where(fringe, np.clip((250 - lum) / 20.0, 0, 1), alpha)
+    return (alpha * 255).astype(np.uint8)
+
+
+def scrub_checker_artifacts(rgb, alpha, mode: str):
+    """Remove leftover checkerboard / JPEG halo pixels from alpha."""
+    import numpy as np
+
+    a = alpha.astype(np.float32)
+    dmin, _, _ = _checker_distance(rgb)
+    lum = rgb.mean(axis=2).astype(np.float32)
+    ch = cv.chroma(rgb)
+    lstd = _local_lum_std(lum)
+
+    flat_cb = (dmin < 26) & (ch < 32) & (lstd < 12)
+    a = np.where(flat_cb, 0.0, a)
+    if mode == "camo":
+        weak = (dmin < 32) & (ch < 30) & (a < 220)
+        a = np.where(weak, 0.0, a)
+    if mode == "stone_texture":
+        halo = (lum > 205) & (ch < 14) & (dmin > 22)
+        a = np.where(halo, 0.0, a)
+        a = np.where(flat_cb | ((dmin < 22) & (lstd < 10)), 0.0, a)
+    # Hard matte + remove mis-keyed opaque checker cells
+    a = np.where(a >= 140, 255.0, 0.0)
+    miskeyed = (a > 200) & flat_cb
+    a = np.where(miskeyed, 0.0, a)
+    return (np.clip(a, 0, 255)).astype(np.uint8)
+
+
+def build_png_from_rgb(rgb, mode: str, fill_hex: str | None):
+    import numpy as np
+    from PIL import Image
+
+    if mode == "white_bg_texture":
+        alpha = make_alpha_white_bg_texture(rgb)
+    elif mode == "stone_texture":
+        alpha = make_alpha_stone_texture(rgb)
+    elif mode == "camo":
+        alpha = make_alpha_camo(rgb)
+    else:
+        alpha = cv.make_alpha(rgb, mode)
+
+    if mode in ("camo", "stone_texture"):
+        alpha = scrub_checker_artifacts(rgb, alpha, mode)
+
+    try:
+        alpha = cv.clean_speckles(alpha, min_size=18 if mode in ("camo", "stone_texture") else 10)
+    except Exception:
+        pass
+
+    if mode in ("camo", "stone_texture", "white_bg_texture"):
+        rgba = np.dstack([rgb, alpha])
+        out = Image.fromarray(rgba, "RGBA")
+    else:
+        measured = cv.estimate_ink_color(rgb, alpha)
+        if fill_hex:
+            if fill_hex.upper() in ("#000000", "#FFFFFF", "#C4A478"):
+                fill = cv.hex_to_rgb(fill_hex)
+                if fill_hex.upper() == "#C4A478" and measured[0] > 100:
+                    fill = tuple(
+                        int(round(0.35 * a + 0.65 * b))
+                        for a, b in zip(fill, measured, strict=True)
+                    )
+            else:
+                fill = measured if sum(measured) > 30 else cv.hex_to_rgb(fill_hex)
+        else:
+            fill = measured
+        if fill_hex == "#000000":
+            fill = (0, 0, 0)
+        elif fill_hex == "#FFFFFF":
+            fill = (255, 255, 255)
+        h, w = alpha.shape
+        rgba = np.zeros((h, w, 4), dtype=np.uint8)
+        rgba[..., 0], rgba[..., 1], rgba[..., 2] = fill
+        rgba[..., 3] = alpha
+        out = Image.fromarray(rgba, "RGBA")
+
+    bbox = out.getbbox()
+    if bbox:
+        pad = 12
+        x0, y0, x1, y1 = bbox
+        x0 = max(0, x0 - pad)
+        y0 = max(0, y0 - pad)
+        x1 = min(out.width, x1 + pad)
+        y1 = min(out.height, y1 + pad)
+        out = out.crop((x0, y0, x1, y1))
+    return cv.upscale_nearest(out)
+
+
+def _hex_rgb(rgb_tuple) -> str:
+    return "#{:02x}{:02x}{:02x}".format(
+        int(rgb_tuple[0]), int(rgb_tuple[1]), int(rgb_tuple[2])
+    )
+
+
+def build_stone_via_magick(src: Path):
+    """Dual-color key for textured stone on checkerboard (ImageMagick)."""
+    import numpy as np
+    from PIL import Image
+
+    rgb = load_rgb(src)
+    c1, c2 = _checker_colors(rgb)
+    colors = [_hex_rgb(c1), _hex_rgb(c2), "#ffffff", "#fefefe", "#fdfdfd"]
+    with tempfile.TemporaryDirectory() as td:
+        out = Path(td) / "keyed.png"
+        cmd = ["magick", str(src), "-alpha", "set"]
+        for col in colors:
+            cmd += ["-fuzz", "14%", "-transparent", col]
+        cmd.append(str(out))
+        subprocess.run(cmd, check=True, capture_output=True)
+        im = Image.open(out).convert("RGBA")
+    # Touch-up with PIL scrub on RGB part
+    arr = np.array(im)
+    rgb2 = arr[..., :3]
+    alpha = scrub_checker_artifacts(rgb2, arr[..., 3], "stone_texture")
+    arr[..., 3] = alpha
+    return Image.fromarray(arr, "RGBA")
+
+
+def build_png_src(src: Path, mode: str, fill_hex: str | None):
+    from PIL import Image
+
+    if mode == "stone_texture":
+        out = build_stone_via_magick(src)
+        bbox = out.getbbox()
+        if bbox:
+            pad = 12
+            x0, y0, x1, y1 = bbox
+            x0 = max(0, x0 - pad)
+            y0 = max(0, y0 - pad)
+            x1 = min(out.width, x1 + pad)
+            y1 = min(out.height, y1 + pad)
+            out = out.crop((x0, y0, x1, y1))
+        return cv.upscale_nearest(out)
+
+    rgb = load_rgb(src)
+    return build_png_from_rgb(rgb, mode, fill_hex)
+
+
+def embedded_svg(png_path: Path, w: int, h: int, title: str) -> str:
+    return cv.camo_svg_wrapper(png_path, w, h, title)
+
+
+def main() -> None:
+    OUT.mkdir(parents=True, exist_ok=True)
+    results = []
+    textured_modes = {"camo", "stone_texture", "white_bg_texture"}
+
+    for prefix, stem, mode, fill_hex in JOBS:
+        src = resolve_src(prefix)
+        print(f"→ {stem} ← {src.name}")
+        png = build_png_src(src, mode, fill_hex)
+        png_path = OUT / f"{stem}.png"
+        png.save(png_path, "PNG", optimize=True)
+
+        title = stem.replace("-", " ")
+        if mode in textured_modes:
+            svg = embedded_svg(png_path, png.width, png.height, title)
+            used = "embedded-rgba"
+        else:
+            import numpy as np
+
+            arr = np.array(png)
+            measured = cv.estimate_ink_color(arr[..., :3], arr[..., 3])
+            if fill_hex == "#000000":
+                used = "#000000"
+            elif fill_hex == "#FFFFFF":
+                used = "#ffffff"
+            elif fill_hex == "#C4A478":
+                used = cv.rgb_to_hex(measured) if measured[0] > 100 else fill_hex
+            else:
+                used = cv.rgb_to_hex(measured)
+            svg = cv.potrace_svg(png, used, title)
+
+        svg_path = OUT / f"{stem}.svg"
+        svg_path.write_text(svg)
+        results.append((stem, png.size, used if mode not in textured_modes else "embedded"))
+        print(f"  {png.size} → {png_path.name}")
+
+    print(f"\nDONE {len(results)} pairs in {OUT}")
+    for r in results:
+        print(" ", r)
+
+
+if __name__ == "__main__":
+    main()
