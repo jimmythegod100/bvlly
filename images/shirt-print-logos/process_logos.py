@@ -191,6 +191,93 @@ def make_alpha_white_bg_texture(rgb):
     return (alpha * 255).astype(np.uint8)
 
 
+def remove_isolated_speckles(png, min_area: int = 220):
+    """Drop tiny opaque blobs disconnected from letterforms (alpha >= 128)."""
+    import numpy as np
+    from PIL import Image
+
+    arr = np.array(png.convert("RGBA"))
+    alpha = arr[..., 3]
+    binary = alpha >= 128
+    h, w = binary.shape
+    labels = np.zeros((h, w), dtype=np.int32)
+    label = 0
+    sizes: dict[int, int] = {}
+
+    for y in range(h):
+        for x in range(w):
+            if not binary[y, x] or labels[y, x]:
+                continue
+            label += 1
+            stack = [(y, x)]
+            labels[y, x] = label
+            n = 0
+            while stack:
+                cy, cx = stack.pop()
+                n += 1
+                for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    ny, nx = cy + dy, cx + dx
+                    if (
+                        0 <= ny < h
+                        and 0 <= nx < w
+                        and binary[ny, nx]
+                        and labels[ny, nx] == 0
+                    ):
+                        labels[ny, nx] = label
+                        stack.append((ny, nx))
+            sizes[label] = n
+
+    kill = {lid for lid, sz in sizes.items() if sz < min_area}
+    if not kill:
+        return png, 0, 0
+    mask = np.isin(labels, list(kill))
+    removed_px = int(mask.sum())
+    alpha[mask] = 0
+    arr[..., 3] = alpha
+    return Image.fromarray(arr, "RGBA"), len(kill), removed_px
+
+
+def remove_faint_detached_fringe(png, dilate_iters: int = 4):
+    """Delete low-alpha pixels not adjacent to solid (>=128) letter ink."""
+    import numpy as np
+    from PIL import Image
+
+    arr = np.array(png.convert("RGBA"))
+    alpha = arr[..., 3].copy()
+    core = alpha >= 128
+    near = _dilate_max(core, iterations=dilate_iters)
+    detached = (alpha > 0) & (alpha < 128) & ~near
+    removed = int(detached.sum())
+    alpha[detached] = 0
+    arr[..., 3] = alpha
+    return Image.fromarray(arr, "RGBA"), removed
+
+
+def clear_alpha_outside_letter_bbox(png, pad: int = 18):
+    """Remove fringe/speckle alpha outside the main glyph bounding box."""
+    import numpy as np
+    from PIL import Image
+
+    arr = np.array(png.convert("RGBA"))
+    alpha = arr[..., 3].copy()
+    core = alpha >= 128
+    if not core.any():
+        return png, 0
+    ys, xs = np.where(core)
+    y0, y1 = int(ys.min()), int(ys.max())
+    x0, x1 = int(xs.min()), int(xs.max())
+    y0 = max(0, y0 - pad)
+    x0 = max(0, x0 - pad)
+    y1 = min(alpha.shape[0] - 1, y1 + pad)
+    x1 = min(alpha.shape[1] - 1, x1 + pad)
+    outside = np.ones_like(alpha, dtype=bool)
+    outside[y0 : y1 + 1, x0 : x1 + 1] = False
+    removed = int((outside & (alpha > 0)).sum())
+    alpha[outside] = 0
+    arr[..., 3] = alpha
+    return Image.fromarray(arr, "RGBA"), removed
+
+
 def scrub_checker_artifacts(rgb, alpha, mode: str):
     """Remove leftover checkerboard / JPEG halo pixels from alpha."""
     import numpy as np
@@ -274,7 +361,12 @@ def build_png_from_rgb(rgb, mode: str, fill_hex: str | None):
         x1 = min(out.width, x1 + pad)
         y1 = min(out.height, y1 + pad)
         out = out.crop((x0, y0, x1, y1))
-    return cv.upscale_nearest(out)
+    out = cv.upscale_nearest(out)
+    if fill_hex == "#FFFFFF" and mode == "light_ink":
+        out, _, _ = remove_isolated_speckles(out, min_area=220)
+        out, _ = clear_alpha_outside_letter_bbox(out, pad=18)
+        out, _ = remove_faint_detached_fringe(out, dilate_iters=4)
+    return out
 
 
 def _hex_rgb(rgb_tuple) -> str:
