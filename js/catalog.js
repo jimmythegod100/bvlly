@@ -395,9 +395,11 @@
     const product = findProduct(resolvedId);
 
     if (pieceRadios) {
-      const options = (cfg.collections || []).map((c) => {
-        const checked = product?.collection === c.id ? 'checked' : '';
-        return `<label><input type="radio" name="piece" value="${c.name}" ${checked}> ${c.name}</label>`;
+      const cols = cfg.collections || [];
+      const selectedId = product?.collection || cols[0]?.id;
+      const options = cols.map((c) => {
+        const checked = c.id === selectedId ? 'checked' : '';
+        return `<label><input type="radio" name="piece" value="${c.name}" ${checked} required> ${c.name}</label>`;
       }).join('');
       pieceRadios.innerHTML = options || '';
     } else if (select && cfg.products) {
