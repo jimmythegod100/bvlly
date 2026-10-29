@@ -6,69 +6,61 @@
   <meta name="theme-color" content="#070707">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=UnifrakturMaguntia&display=swap">
-  <title>Contact — BVLLY</title>
-  <link rel="stylesheet" href="css/brand.css?v=20261025a">
-  <link rel="stylesheet" href="css/main.css?v=20261025a">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap">
+  <title>Contact | BVLLY</title>
+  <link rel="icon" href="favicon.svg">
+  <link rel="stylesheet" href="css/brand.css?v=20261029a">
+  <link rel="stylesheet" href="css/main.css?v=20261029a">
 </head>
 <body data-page="contact">
   <header class="site-header" data-site-header></header>
 
-  <main>
-    <div class="page-header">
-      <div class="container">
-        <h1>Join the drop</h1>
-        <p>Waitlist, wholesale, or a sizing question. No checkout on this draft.</p>
-      </div>
+  <main id="main">
+    <div class="container">
+      <div class="contact-meta" data-contact-info></div>
     </div>
 
-    <section class="section">
-      <div class="container contact-grid">
-        <div class="contact-info" data-contact-info></div>
+    <div class="contact-form-wrap">
+      <h1>Join the drop</h1>
+      <p class="form-intro">Early access to the pink &amp; black drop. No checkout on this draft.</p>
+      <div class="form-card">
+        <form data-contact-form method="POST">
+          <input type="hidden" name="_subject" value="">
+          <input type="hidden" name="_next" value="">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+          <input type="hidden" name="piece" value="">
 
-        <div class="form-card">
-          <form data-contact-form method="POST">
-            <input type="hidden" name="_subject" value="">
-            <input type="hidden" name="_next" value="">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="text" name="_honey" style="display:none">
-
-            <div class="form-group">
-              <label for="name">Your name</label>
-              <input type="text" id="name" name="name" required autocomplete="name">
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" required autocomplete="email">
-            </div>
-            <div class="form-group">
-              <label for="piece">Piece of interest</label>
-              <select id="piece" name="piece"></select>
-            </div>
-            <div class="form-group">
-              <label for="size">Size</label>
-              <select id="size" name="size"></select>
-            </div>
-            <div class="form-group">
-              <label for="color">Color</label>
-              <select id="color" name="color"></select>
-            </div>
-            <div class="form-group">
-              <label for="message">Message</label>
-              <textarea id="message" name="message" required placeholder="Size, city, and what you want from the drop."></textarea>
-            </div>
-            <button class="btn btn-primary" type="submit">Send</button>
-            <p class="form-note">FormSubmit delivers this to the label inbox. First submission sends an activation email.</p>
-          </form>
-        </div>
+          <div class="form-group">
+            <label for="name">Full name *</label>
+            <input type="text" id="name" name="name" required autocomplete="name" placeholder="Enter your full name">
+          </div>
+          <div class="form-group">
+            <label for="email">Email address *</label>
+            <input type="email" id="email" name="email" required autocomplete="email" placeholder="Enter your email address">
+          </div>
+          <div class="form-group">
+            <label>Piece of interest *</label>
+            <div class="checkbox-row" data-piece-checks></div>
+          </div>
+          <div class="form-group">
+            <label>Size *</label>
+            <div class="checkbox-row" data-size-checks></div>
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Any sizing requests or additional notes..."></textarea>
+          </div>
+          <button class="btn btn-primary" type="submit">Send</button>
+        </form>
       </div>
-    </section>
+    </div>
   </main>
 
   <footer class="site-footer" data-site-footer></footer>
 
-  <script src="js/site-config.js?v=20261025a"></script>
-  <script src="js/catalog.js?v=20261025a"></script>
-  <script src="js/layout.js?v=20261025a"></script>
+  <script src="js/site-config.js?v=20261029a"></script>
+  <script src="js/catalog.js?v=20261029a"></script>
+  <script src="js/layout.js?v=20261029a"></script>
 </body>
 </html>
