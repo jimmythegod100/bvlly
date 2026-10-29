@@ -1,13 +1,9 @@
 /**
  * Site configuration — BVLLY
- * Clothing brand. Essence from the exotic bully: compact, stubborn, unhurried.
- *
- * Set brand.siteUrl to the live origin (no trailing slash) before sharing
- * so Open Graph, canonical, sitemap, and the waitlist redirect resolve.
+ * Copy & structure aligned to live Wix site (andrewjamesmartine7.wixsite.com/my-site-1).
  */
 (function () {
-  // Bump when lookbook JPGs change so browsers skip stale CDN/disk cache.
-  const ASSET_V = '20261025a';
+  const ASSET_V = '20261029a';
 
   const COLORWAYS = [
     { name: 'Pink', slug: 'pink', hex: '#e5b3c5' },
@@ -33,7 +29,7 @@
     brand: {
       name: 'BVLLY',
       shortName: 'BVLLY',
-      logoText: 'B V L L Y',
+      logoText: 'BVLLY',
       tagline: 'Streetwear drawn from the exotic bully.',
       email: 'hello@bvlly.com',
       phone: '',
@@ -43,23 +39,75 @@
     },
     hero: {
       kicker: '',
-      headline: 'Built from the breed.',
+      headline: 'Be Bully',
       subhead: 'Oversized heavyweight streetwear. The exotic bully — compact, stubborn, unhurried — is the stance behind the cut, the gothic print, and the 1×1″ embroidered mark.',
       mascot: asset('images/brand/bully-mascot.png'),
-      image: asset('images/lookbook/hero-mark-hood.jpg'),
+      image: worn('beware-hood', 'black'),
+      video: asset('images/wix/hero-reel.mp4'),
       fit: 'cover',
       ctaPrimary: { label: 'Shop the drop', href: 'shop.html' },
       ctaSecondary: { label: 'The mark', href: 'about.html' }
     },
+    homeCategories: [
+      {
+        id: 'hoodies',
+        name: 'Hoodies',
+        href: 'shop.html?category=hoodies',
+        image: worn('beware-hood', 'black')
+      },
+      {
+        id: 'shirts',
+        name: 'Shirts',
+        href: 'shop.html?category=shirts',
+        image: worn('beware-tee', 'black')
+      },
+      {
+        id: 'sets',
+        name: 'Sets',
+        href: 'shop.html?collection=sets',
+        image: worn('mark-hood', 'black')
+      },
+      {
+        id: 'shorts',
+        name: 'Shorts',
+        href: 'shop.html?category=shorts',
+        image: worn('mark-shorts', 'black')
+      }
+    ],
+    lookbook: [
+      worn('beware-hood', 'black'),
+      worn('mark-hood', 'black'),
+      worn('bb-sweatsuit', 'black'),
+      asset('images/wix/look-mark-tee-pink.png')
+    ],
+    fitNotes: [
+      {
+        title: 'Oversized',
+        body: 'The silhouette from the drop — not a slim fashion tee. Drop shoulder, boxy hood, and heavy cotton. Built for the unbothered stance.'
+      },
+      {
+        title: 'Beware',
+        body: 'Old English type in distressed silver. Loud on the chest and louder on the back. The gothic print is a declaration of the breed\'s stance.'
+      },
+      {
+        title: 'The ark',
+        body: 'A micro ~1×1″ embroidered exotic bulldog. Left chest. No slogan. The quiet mark of the breed, worn with confidence and purpose.'
+      }
+    ],
     about: {
       headline: 'Two ways to wear it.',
       intro: 'BVLLY is a clothing label. The line takes its essence from the exotic bully: short, thick, unbothered. That stance shows up in the oversized cut, the silver gothic type, and a 1×1″ embroidered mark.',
-      body: [
-        'The Beware line is loud on purpose: Old English type on the chest — “Bully BEWARE!” — and “Never-mind the dog, beware the owner” on the back of the hood.',
-        'The Mark line is the other temperature: a micro ~1×1″ embroidered exotic bulldog on the left chest (halfway to the underarm, a few inches below the collar), no slogan. Same stance. Quieter.',
-        'Every piece runs in pink and black — cut oversized. Checkout is not live yet; join the list if you want a size.'
+      pillars: [
+        {
+          title: 'Beware',
+          body: 'Loud and unapologetic. The gothic print is a declaration of the breed\'s stance. Distressed silver typography, heavy cotton, and a stance that refuses to be ignored.'
+        },
+        {
+          title: 'The Mark',
+          body: 'Quiet and precise. The micro embroidered mark is the signature of the breed. A single ~1×1″ detail on the left chest, a silent reminder of the stance behind the cut.'
+        }
       ],
-      image: worn('mark-tee', 'black'),
+      image: asset('images/wix/about-bully-character.png'),
       fit: 'cover'
     },
     collections: [
@@ -84,6 +132,11 @@
         tagline: 'The micro ~1×1″ mark, off the chest. Pink and black.'
       }
     ],
+    categoryMap: {
+      hoodies: ['beware-hood', 'mark-hood'],
+      shirts: ['beware-tee', 'mark-tee'],
+      shorts: ['mark-shorts']
+    },
     products: [
       {
         id: 'bb-sweatsuit',
@@ -185,12 +238,29 @@
     productAliases: {
       'mark-tee-bone': 'mark-tee',
       'mark-tee-ink': 'mark-tee',
-      'mark-hood-bone': 'mark-hood'
+      'mark-hood-bone': 'mark-hood',
+      'mark-zip-set': 'mark-hood'
+    },
+    shop: {
+      banner: asset('images/wix/shop-hero.jpg')
     },
     contact: {
       formAction: 'https://formsubmit.co/hello@bvlly.com',
       thanksPage: 'thanks.html',
       hours: 'Drop inquiries answered within two business days.'
+    },
+    privacy: {
+      intro: 'We collect and process personal data to facilitate your waitlist inquiries and wholesale orders. Your information is treated with the same stubborn integrity as the breed we draw from.',
+      sections: [
+        {
+          title: 'Inquiries & waitlist',
+          body: 'When you join the waitlist or send a sizing inquiry, we collect your name, email address, and the specific piece you’re interested in. This data is used solely to confirm your entry and provide wholesale details.'
+        },
+        {
+          title: 'Wholesale & sizing',
+          body: 'For wholesale inquiries and sizing requests, we collect your business name, email, and the specific product line you’re interested in. This information is processed to provide wholesale pricing and sizing charts.'
+        }
+      ]
     },
     seo: {
       description: 'BVLLY — clothing drawn from the exotic bully. Oversized streetwear in pink and black. Gothic Beware prints and embroidered marks.',

@@ -1,5 +1,5 @@
 /**
- * Catalog helpers — product grid, galleries, media slots.
+ * Catalog helpers — product grid, galleries, media slots, Wix-like shop/PDP.
  */
 (function () {
   const cfg = window.SITE_CONFIG;
@@ -14,7 +14,7 @@
   }
 
   function money(n) {
-    return `$${Number(n).toFixed(0)}`;
+    return `$${Number(n).toFixed(2)}`;
   }
 
   function colorways(item) {
@@ -81,7 +81,7 @@
     });
   }
 
-  window.BVLLY = { mediaSlot, collectionName, bindPhotoSlots };
+  window.BVLLY = { mediaSlot, collectionName, bindPhotoSlots, findProduct, money };
 
   function swatches(p) {
     const dots = colorways(p).map((c) => {
@@ -97,7 +97,6 @@
       <a class="product-card" href="product.html?id=${encodeURIComponent(p.id)}">
         ${mediaSlot(preview)}
         <div class="product-meta">
-          <span class="product-collection">${collectionName(p.collection)}</span>
           <h3>${p.name}</h3>
           <span class="price">${money(p.price)}</span>
           ${swatches(p)}
@@ -125,45 +124,93 @@
             <p>${c.tagline}</p>
           </div>
           <span class="collection-meta">
-            <span class="product-collection">${count} pieces</span>
-            <span class="collection-explore">Explore →</span>
+            <span>${count} pieces</span>
+            <span>Explore →</span>
           </span>
         </a>`;
     }).join('');
   }
 
   function activeCollection() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('collection') || 'all';
+    return new URLSearchParams(window.location.search).get('collection') || 'all';
+  }
+
+  function activeCategory() {
+    return new URLSearchParams(window.location.search).get('category') || '';
+  }
+
+  function filterProducts() {
+    const collection = activeCollection();
+    const category = activeCategory();
+    let list = cfg.products || [];
+    if (collection !== 'all') list = list.filter((p) => p.collection === collection);
+    if (category && cfg.categoryMap?.[category]) {
+      const ids = new Set(cfg.categoryMap[category]);
+      list = list.filter((p) => ids.has(p.id));
+    }
+    return list;
   }
 
   function fillShop() {
     const grid = document.querySelector('[data-product-grid]');
-    const filters = document.querySelector('[data-shop-filters]');
     if (!grid || !cfg.products) return;
 
-    const current = activeCollection();
-    const chips = [{ id: 'all', name: 'All' }, ...(cfg.collections || [])];
-    if (filters) {
-      filters.innerHTML = chips.map((c) => {
-        const href = c.id === 'all' ? 'shop.html' : `shop.html?collection=${encodeURIComponent(c.id)}`;
-        const active = current === c.id ? 'is-active' : '';
-        return `<a class="filter-chip ${active}" href="${href}">${c.name}</a>`;
-      }).join('');
+    const banner = document.querySelector('[data-shop-banner]');
+    if (banner && cfg.shop?.banner) {
+      banner.innerHTML = `<img src="${cfg.shop.banner}" alt="" width="1200" height="480" decoding="async">`;
     }
 
-    const list = current === 'all'
-      ? cfg.products
-      : cfg.products.filter((p) => p.collection === current);
+    const side = document.querySelector('[data-shop-side]');
+    const current = activeCollection();
+    const category = activeCategory();
+    if (side) {
+      const chips = [{ id: 'all', name: 'All Products' }, ...(cfg.collections || [])];
+      side.innerHTML = `
+        <div class="side-block">
+          <h3>Browse by</h3>
+          ${chips.map((c) => {
+            const href = c.id === 'all' ? 'shop.html' : `shop.html?collection=${encodeURIComponent(c.id)}`;
+            const active = (!category && current === c.id) || (c.id === 'all' && current === 'all' && !category) ? 'is-active' : '';
+            return `<a class="${active}" href="${href}">${c.name}</a>`;
+          }).join('')}
+        </div>
+        <div class="side-block">
+          <h3>Filter by</h3>
+          <p class="price-range">Price<br>$38.00 — $178.00</p>
+        </div>`;
+    }
 
+    const list = filterProducts();
     const heading = document.querySelector('[data-shop-heading]');
-    if (heading && current !== 'all') {
-      const col = collectionById(current);
-      heading.textContent = col ? col.name : 'Shop';
+    if (heading) {
+      if (category) heading.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+      else if (current !== 'all') heading.textContent = collectionById(current)?.name || 'All Products';
+      else heading.textContent = 'All Products';
+    }
+
+    const toolbar = document.querySelector('[data-shop-toolbar]');
+    if (toolbar) {
+      toolbar.innerHTML = `
+        <span>${list.length} product${list.length === 1 ? '' : 's'}</span>
+        <label>Sort by:
+          <select class="sort-select" aria-label="Sort products">
+            <option>Recommended</option>
+            <option>Price: low to high</option>
+            <option>Price: high to low</option>
+          </select>
+        </label>`;
+      const select = toolbar.querySelector('select');
+      select?.addEventListener('change', () => {
+        let sorted = [...list];
+        if (select.selectedIndex === 1) sorted.sort((a, b) => a.price - b.price);
+        if (select.selectedIndex === 2) sorted.sort((a, b) => b.price - a.price);
+        grid.innerHTML = sorted.map(productCard).join('');
+        bindPhotoSlots(grid);
+      });
     }
 
     if (!list.length) {
-      grid.innerHTML = `<p class="empty-state">No pieces in this collection yet.</p>`;
+      grid.innerHTML = `<p class="empty-state">No pieces in this view yet.</p>`;
       return;
     }
     grid.innerHTML = list.map(productCard).join('');
@@ -191,23 +238,22 @@
     const activeColor = ways.find((c) => c.slug === colorParam) || ways.find((c) => c.image === product.image) || ways[0];
     const activeSrc = activeColor?.image || product.image;
 
-    document.title = `${product.name} — ${cfg.brand.name}`;
+    document.title = `${product.name} | BVLLY`;
     const sizes = (product.sizes || []).map((s, i) =>
       `<button type="button" class="size-chip${i === 0 ? ' is-selected' : ''}" data-size="${s}" aria-pressed="${i === 0 ? 'true' : 'false'}">${s}</button>`
     ).join('');
     const colors = ways.map((c) => {
       const selected = c.slug === activeColor?.slug ? ' is-selected' : '';
-      const tone = c.name.replace(/"/g, '');
       const bg = c.hex ? `style="--swatch:${c.hex}"` : '';
-      return `<button type="button" class="size-chip color-chip${selected}" data-tone="${tone}" data-color="${c.slug}" data-src="${c.image}" ${bg} aria-pressed="${selected ? 'true' : 'false'}">${c.name}</button>`;
+      return `<button type="button" class="size-chip color-chip${selected}" data-tone="${c.name}" data-color="${c.slug}" data-src="${c.image}" ${bg} aria-label="${c.name}" aria-pressed="${selected ? 'true' : 'false'}"></button>`;
     }).join('');
     const shots = gallery(product);
-    const thumbs = shots.length > 1
+    const thumbs = shots.length
       ? `<div class="thumbs" data-thumbs>${shots.map((src) => {
           const way = ways.find((c) => c.image === src);
           const active = src === activeSrc ? 'is-active' : '';
-          const label = way ? way.name : (src.includes('-back') ? 'Back' : 'Photo');
-          const color = way?.slug || (src.includes('-back') ? (ways[0]?.slug || '') : '');
+          const label = way ? way.name : 'Photo';
+          const color = way?.slug || ways[0]?.slug || '';
           return `
           <button type="button" class="thumb ${active}" data-src="${src}" data-color="${color}" aria-label="${label}">
             <img src="${src}" alt="${product.name} ${label}">
@@ -220,32 +266,46 @@
     el.innerHTML = `
       <div class="product-layout">
         <div class="product-gallery">
-          ${mediaSlot({ ...product, fit: 'cover' }, 'product-hero', activeSrc)}
           ${thumbs}
+          ${mediaSlot({ ...product, fit: 'cover' }, 'product-hero', activeSrc)}
         </div>
         <div class="product-copy">
-          <p class="product-collection">${collectionName(product.collection)}</p>
           <h1>${product.name}</h1>
           <p class="price">${money(product.price)}</p>
-          <p>${product.description}</p>
-          <p class="product-collection">Size</p>
-          <div class="size-row" data-size-row>${sizes}</div>
           <p class="product-collection">Color</p>
           <div class="color-row" data-color-row>${colors}</div>
-          <p>Checkout is not live on this draft — request a size below.</p>
-          <p style="margin-top:1.25rem;">
-            <a class="btn btn-primary" data-notify-link href="${notifyHref}">Notify me</a>
-            <a class="btn btn-outline" href="shop.html">All pieces</a>
-          </p>
+          <p class="product-collection">Size</p>
+          <div class="size-row" data-size-row>${sizes}</div>
+          <div class="qty-row" data-qty>
+            <button type="button" data-qty-minus aria-label="Decrease quantity">−</button>
+            <span data-qty-value>1</span>
+            <button type="button" data-qty-plus aria-label="Increase quantity">+</button>
+          </div>
+          <div class="pdp-actions">
+            <button class="btn btn-primary btn-block" type="button" data-add-cart>Add to cart</button>
+            <a class="btn btn-light btn-block" data-buy-now href="${notifyHref}">Buy now</a>
+          </div>
+          <p>${product.description}</p>
+          <p class="draft-note">Checkout is not live on this draft — Add to cart keeps a local bag; Buy now opens the waitlist.</p>
         </div>
       </div>`;
     bindPhotoSlots(el);
 
     const mainImg = el.querySelector('.product-hero img');
-    const notify = el.querySelector('[data-notify-link]');
+    const buy = el.querySelector('[data-buy-now]');
+    let qty = 1;
 
     function selectedSize() {
       return el.querySelector('[data-size-row] .size-chip.is-selected')?.dataset.size || product.sizes?.[0] || '';
+    }
+    function selectedColor() {
+      return el.querySelector('[data-color-row] .color-chip.is-selected');
+    }
+
+    function syncLinks() {
+      const colorName = selectedColor()?.dataset.tone || '';
+      const href = `contact.html?piece=${encodeURIComponent(product.id)}&size=${encodeURIComponent(selectedSize())}&color=${encodeURIComponent(colorName)}`;
+      if (buy) buy.href = href;
     }
 
     function setColor(src, slug) {
@@ -259,20 +319,15 @@
         chip.classList.toggle('is-selected', on);
         chip.setAttribute('aria-pressed', on ? 'true' : 'false');
       });
-      const colorName = ways.find((c) => c.slug === slug)?.name || '';
-      if (notify) {
-        notify.href = `contact.html?piece=${encodeURIComponent(product.id)}&size=${encodeURIComponent(selectedSize())}&color=${encodeURIComponent(colorName)}`;
-      }
+      syncLinks();
     }
 
     el.querySelectorAll('[data-thumbs] .thumb').forEach((btn) => {
       btn.addEventListener('click', () => setColor(btn.dataset.src, btn.dataset.color));
     });
-
     el.querySelectorAll('[data-color-row] .color-chip').forEach((btn) => {
       btn.addEventListener('click', () => setColor(btn.dataset.src, btn.dataset.color));
     });
-
     el.querySelectorAll('[data-size-row] .size-chip').forEach((btn) => {
       btn.addEventListener('click', () => {
         el.querySelectorAll('[data-size-row] .size-chip').forEach((chip) => {
@@ -281,10 +336,28 @@
         });
         btn.classList.add('is-selected');
         btn.setAttribute('aria-pressed', 'true');
-        const colorName = el.querySelector('[data-color-row] .color-chip.is-selected')?.textContent.trim() || '';
-        if (notify) {
-          notify.href = `contact.html?piece=${encodeURIComponent(product.id)}&size=${encodeURIComponent(btn.dataset.size || '')}&color=${encodeURIComponent(colorName)}`;
-        }
+        syncLinks();
+      });
+    });
+
+    const qtyEl = el.querySelector('[data-qty-value]');
+    el.querySelector('[data-qty-minus]')?.addEventListener('click', () => {
+      qty = Math.max(1, qty - 1);
+      if (qtyEl) qtyEl.textContent = String(qty);
+    });
+    el.querySelector('[data-qty-plus]')?.addEventListener('click', () => {
+      qty += 1;
+      if (qtyEl) qtyEl.textContent = String(qty);
+    });
+
+    el.querySelector('[data-add-cart]')?.addEventListener('click', () => {
+      window.BVLLY_CART?.add({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        size: selectedSize(),
+        color: selectedColor()?.dataset.tone || '',
+        qty
       });
     });
 
@@ -312,15 +385,27 @@
   }
 
   function prefillContactPiece() {
+    const pieceRadios = document.querySelector('[data-piece-radios]');
     const select = document.querySelector('[name="piece"]');
-    if (!select || !cfg.products) return;
     const params = new URLSearchParams(window.location.search);
     const current = params.get('piece') || '';
     const size = params.get('size') || '';
     const color = params.get('color') || '';
     const resolvedId = (cfg.productAliases && cfg.productAliases[current]) || current;
-    select.innerHTML = `<option value="">Just saying hello</option>` +
-      cfg.products.map((p) => `<option value="${p.name}" ${p.id === resolvedId ? 'selected' : ''}>${p.name}</option>`).join('');
+    const product = findProduct(resolvedId);
+
+    if (pieceRadios) {
+      const cols = cfg.collections || [];
+      const selectedId = product?.collection || cols[0]?.id;
+      const options = cols.map((c) => {
+        const checked = c.id === selectedId ? 'checked' : '';
+        return `<label><input type="radio" name="piece" value="${c.name}" ${checked} required> ${c.name}</label>`;
+      }).join('');
+      pieceRadios.innerHTML = options || '';
+    } else if (select && cfg.products) {
+      select.innerHTML = `<option value="">Just saying hello</option>` +
+        cfg.products.map((p) => `<option value="${p.name}" ${p.id === resolvedId ? 'selected' : ''}>${p.name}</option>`).join('');
+    }
 
     const sizeSelect = document.querySelector('[name="size"]');
     if (sizeSelect) {
@@ -353,9 +438,8 @@
 
     const message = document.querySelector('[name="message"]');
     if (message && !message.value && (current || size || color)) {
-      const piece = findProduct(current);
       const parts = [];
-      if (piece) parts.push(`Interested in ${piece.name}.`);
+      if (product) parts.push(`Interested in ${product.name}.`);
       if (color) parts.push(`${color}.`);
       if (size) parts.push(`Size ${size}.`);
       message.placeholder = parts.length
