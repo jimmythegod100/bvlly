@@ -1,5 +1,5 @@
 /**
- * Catalog helpers — product grid, galleries, media slots.
+ * Catalog helpers — shop grid, PDP, contact prefills (Wix-matched).
  */
 (function () {
   const cfg = window.SITE_CONFIG;
@@ -14,7 +14,7 @@
   }
 
   function money(n) {
-    return `$${Number(n).toFixed(0)}`;
+    return `$${Number(n).toFixed(2)}`;
   }
 
   function colorways(item) {
@@ -83,53 +83,36 @@
 
   window.BVLLY = { mediaSlot, collectionName, bindPhotoSlots };
 
-  function swatches(p) {
-    const dots = colorways(p).map((c) => {
-      const bg = c.hex ? `style="background:${c.hex}"` : '';
-      return `<span class="swatch" ${bg} title="${c.name}"></span>`;
-    }).join('');
-    return dots ? `<div class="card-swatches" aria-hidden="true">${dots}</div>` : '';
-  }
-
-  function productCard(p) {
-    const preview = { ...p, fit: 'cover' };
+  function shopCard(p) {
     return `
-      <a class="product-card" href="product.html?id=${encodeURIComponent(p.id)}">
-        ${mediaSlot(preview)}
-        <div class="product-meta">
-          <span class="product-collection">${collectionName(p.collection)}</span>
-          <h3>${p.name}</h3>
-          <span class="price">${money(p.price)}</span>
-          ${swatches(p)}
+      <a class="shop-card" href="product.html?id=${encodeURIComponent(p.id)}">
+        <div class="shop-card-media">
+          <img src="${p.image}" alt="${p.name}" loading="lazy" decoding="async">
         </div>
+        <h3 class="shop-card-name">${p.name}</h3>
+        <p class="shop-card-price">Price ${money(p.price)}</p>
       </a>`;
-  }
-
-  function fillFeatured() {
-    const el = document.querySelector('[data-featured-products]');
-    if (!el || !cfg.products) return;
-    const list = cfg.products.filter((p) => p.featured);
-    el.innerHTML = list.map(productCard).join('');
-    bindPhotoSlots(el);
   }
 
   function fillCollections() {
     const el = document.querySelector('[data-collections]');
     if (!el || !cfg.collections) return;
-    el.innerHTML = cfg.collections.map((c) => {
-      const count = (cfg.products || []).filter((p) => p.collection === c.id).length;
-      return `
-        <a class="collection-card" href="shop.html?collection=${encodeURIComponent(c.id)}">
-          <div>
-            <h3>${c.name}</h3>
-            <p>${c.tagline}</p>
-          </div>
-          <span class="collection-meta">
-            <span class="product-collection">${count} pieces</span>
-            <span class="collection-explore">Explore →</span>
-          </span>
-        </a>`;
-    }).join('');
+    el.innerHTML = `
+      <div class="collections-intro" style="text-align:left;margin-bottom:2rem;">
+        <p style="letter-spacing:0.14em;">Hoodies. Shirts. Sets. Shorts</p>
+        <a class="btn btn-outline" href="shop.html">Explore</a>
+      </div>
+      <div class="fit-notes" style="border:1px solid rgba(255,255,255,0.2);">
+        ${cfg.collections.map((c) => {
+          const count = (cfg.products || []).filter((p) => p.collection === c.id).length;
+          return `
+            <article>
+              <h3>${c.name}</h3>
+              <p>${c.tagline}</p>
+              <p style="margin-top:1rem;"><a href="shop.html?collection=${encodeURIComponent(c.id)}">Explore → ${count} pieces</a></p>
+            </article>`;
+        }).join('')}
+      </div>`;
   }
 
   function activeCollection() {
@@ -138,36 +121,51 @@
   }
 
   function fillShop() {
-    const grid = document.querySelector('[data-product-grid]');
-    const filters = document.querySelector('[data-shop-filters]');
-    if (!grid || !cfg.products) return;
+    const root = document.querySelector('[data-shop-root]');
+    if (!root || !cfg.products) return;
 
     const current = activeCollection();
-    const chips = [{ id: 'all', name: 'All' }, ...(cfg.collections || [])];
-    if (filters) {
-      filters.innerHTML = chips.map((c) => {
-        const href = c.id === 'all' ? 'shop.html' : `shop.html?collection=${encodeURIComponent(c.id)}`;
-        const active = current === c.id ? 'is-active' : '';
-        return `<a class="filter-chip ${active}" href="${href}">${c.name}</a>`;
-      }).join('');
-    }
+    const list = [...cfg.products].sort((a, b) => (a.shopOrder || 99) - (b.shopOrder || 99))
+      .filter((p) => current === 'all' || p.collection === current);
 
-    const list = current === 'all'
-      ? cfg.products
-      : cfg.products.filter((p) => p.collection === current);
+    const prices = cfg.products.map((p) => p.price);
+    const minP = Math.min(...prices);
+    const maxP = Math.max(...prices);
 
-    const heading = document.querySelector('[data-shop-heading]');
-    if (heading && current !== 'all') {
-      const col = collectionById(current);
-      heading.textContent = col ? col.name : 'Shop';
-    }
-
-    if (!list.length) {
-      grid.innerHTML = `<p class="empty-state">No pieces in this collection yet.</p>`;
-      return;
-    }
-    grid.innerHTML = list.map(productCard).join('');
-    bindPhotoSlots(grid);
+    root.innerHTML = `
+      ${cfg.shopBanner ? `<div class="shop-banner"><img src="${cfg.shopBanner}" alt="" width="1400" height="280"></div>` : ''}
+      <div class="container">
+        <p class="shop-crumbs"><a href="index.html">Home</a> &gt; All Products</p>
+        <div class="shop-layout">
+          <aside class="shop-sidebar">
+            <h1 style="font-size:1.8rem;font-weight:600;margin:0 0 1.5rem;">All Products</h1>
+            <h2>Browse by</h2>
+            <a class="browse-link" href="shop.html">All Products</a>
+            <h2>Filter by</h2>
+            <div class="filter-block">
+              <div class="filter-title">Price</div>
+              <div class="price-range">$${minP} — $${maxP}</div>
+            </div>
+            <details class="filter-block">
+              <summary>Color <span>+</span></summary>
+              <div style="padding-top:0.5rem;font-size:0.85rem;color:rgba(255,255,255,0.7);">Pink · Black · Graphite</div>
+            </details>
+            <details class="filter-block">
+              <summary>Size <span>+</span></summary>
+              <div style="padding-top:0.5rem;font-size:0.85rem;color:rgba(255,255,255,0.7);">S · M · L · XL · XXL · One size</div>
+            </details>
+          </aside>
+          <div>
+            <div class="shop-toolbar">
+              <span>${list.length} products</span>
+              <span>Sort by: Recommended</span>
+            </div>
+            <div class="shop-grid" data-product-grid>
+              ${list.map(shopCard).join('')}
+            </div>
+          </div>
+        </div>
+      </div>`;
   }
 
   function fillProductPage() {
@@ -179,7 +177,7 @@
     const product = findProduct(id);
     if (!product) {
       el.innerHTML = `
-        <div class="empty-state">
+        <div class="error-page">
           <p>That piece is not in the catalog.</p>
           <p><a class="btn btn-primary" href="shop.html">Back to shop</a></p>
         </div>`;
@@ -188,105 +186,103 @@
 
     const ways = colorways(product);
     const colorParam = params.get('color');
-    const activeColor = ways.find((c) => c.slug === colorParam) || ways.find((c) => c.image === product.image) || ways[0];
-    const activeSrc = activeColor?.image || product.image;
-
-    document.title = `${product.name} — ${cfg.brand.name}`;
-    const sizes = (product.sizes || []).map((s, i) =>
-      `<button type="button" class="size-chip${i === 0 ? ' is-selected' : ''}" data-size="${s}" aria-pressed="${i === 0 ? 'true' : 'false'}">${s}</button>`
-    ).join('');
-    const colors = ways.map((c) => {
-      const selected = c.slug === activeColor?.slug ? ' is-selected' : '';
-      const tone = c.name.replace(/"/g, '');
-      const bg = c.hex ? `style="--swatch:${c.hex}"` : '';
-      return `<button type="button" class="size-chip color-chip${selected}" data-tone="${tone}" data-color="${c.slug}" data-src="${c.image}" ${bg} aria-pressed="${selected ? 'true' : 'false'}">${c.name}</button>`;
-    }).join('');
+    let activeColor = ways.find((c) => c.slug === colorParam) || ways.find((c) => c.image === product.image) || ways[0];
+    let qty = 1;
+    let activeSize = product.sizes?.[0] || '';
     const shots = gallery(product);
-    const thumbs = shots.length > 1
-      ? `<div class="thumbs" data-thumbs>${shots.map((src) => {
-          const way = ways.find((c) => c.image === src);
-          const active = src === activeSrc ? 'is-active' : '';
-          const label = way ? way.name : (src.includes('-back') ? 'Back' : 'Photo');
-          const color = way?.slug || (src.includes('-back') ? (ways[0]?.slug || '') : '');
-          return `
-          <button type="button" class="thumb ${active}" data-src="${src}" data-color="${color}" aria-label="${label}">
-            <img src="${src}" alt="${product.name} ${label}">
-          </button>`;
-        }).join('')}</div>`
-      : '';
 
-    const notifyHref = `contact.html?piece=${encodeURIComponent(product.id)}&size=${encodeURIComponent(product.sizes?.[0] || '')}&color=${encodeURIComponent(activeColor?.name || '')}`;
+    document.title = `${product.name} | ${cfg.brand.name}`;
 
-    el.innerHTML = `
-      <div class="product-layout">
-        <div class="product-gallery">
-          ${mediaSlot({ ...product, fit: 'cover' }, 'product-hero', activeSrc)}
-          ${thumbs}
-        </div>
-        <div class="product-copy">
-          <p class="product-collection">${collectionName(product.collection)}</p>
-          <h1>${product.name}</h1>
-          <p class="price">${money(product.price)}</p>
-          <p>${product.description}</p>
-          <p class="product-collection">Size</p>
-          <div class="size-row" data-size-row>${sizes}</div>
-          <p class="product-collection">Color</p>
-          <div class="color-row" data-color-row>${colors}</div>
-          <p>Checkout is not live on this draft — request a size below.</p>
-          <p style="margin-top:1.25rem;">
-            <a class="btn btn-primary" data-notify-link href="${notifyHref}">Notify me</a>
-            <a class="btn btn-outline" href="shop.html">All pieces</a>
-          </p>
-        </div>
-      </div>`;
-    bindPhotoSlots(el);
-
-    const mainImg = el.querySelector('.product-hero img');
-    const notify = el.querySelector('[data-notify-link]');
-
-    function selectedSize() {
-      return el.querySelector('[data-size-row] .size-chip.is-selected')?.dataset.size || product.sizes?.[0] || '';
+    function notifyHref() {
+      return `contact.html?piece=${encodeURIComponent(product.id)}&size=${encodeURIComponent(activeSize)}&color=${encodeURIComponent(activeColor?.name || '')}`;
     }
 
-    function setColor(src, slug) {
-      if (mainImg && src) {
-        mainImg.src = src;
-        mainImg.closest('.media-slot')?.classList.add('has-photo');
-      }
-      el.querySelectorAll('.thumb').forEach((t) => t.classList.toggle('is-active', t.dataset.src === src));
-      el.querySelectorAll('[data-color-row] .color-chip').forEach((chip) => {
-        const on = chip.dataset.color === slug;
-        chip.classList.toggle('is-selected', on);
-        chip.setAttribute('aria-pressed', on ? 'true' : 'false');
-      });
-      const colorName = ways.find((c) => c.slug === slug)?.name || '';
-      if (notify) {
-        notify.href = `contact.html?piece=${encodeURIComponent(product.id)}&size=${encodeURIComponent(selectedSize())}&color=${encodeURIComponent(colorName)}`;
-      }
-    }
+    function render() {
+      const activeSrc = activeColor?.image || product.image;
+      el.innerHTML = `
+        <div class="container pdp">
+          <div class="pdp-gallery">
+            <div class="pdp-thumbs">
+              ${shots.map((src) => {
+                const way = ways.find((c) => c.image === src);
+                const active = src === activeSrc ? 'is-active' : '';
+                return `<button type="button" class="${active}" data-src="${src}" data-color="${way?.slug || ''}">
+                  <img src="${src}" alt="">
+                </button>`;
+              }).join('')}
+            </div>
+            <div class="pdp-main">
+              <img src="${activeSrc}" alt="${product.name}" data-main-img>
+            </div>
+          </div>
+          <div class="pdp-info">
+            <h1>${product.name}</h1>
+            <p class="pdp-price">${money(product.price)}</p>
+            <div class="pdp-field">
+              <span>Color *</span>
+              <div class="swatch-row">
+                ${ways.map((c) => `
+                  <button type="button" class="swatch-btn ${c.slug === activeColor?.slug ? 'is-active' : ''}"
+                    style="background:${c.hex || '#ccc'}" data-color="${c.slug}" data-src="${c.image}"
+                    aria-label="${c.name}" title="${c.name}"></button>`).join('')}
+              </div>
+            </div>
+            <div class="pdp-field">
+              <span>Size *</span>
+              <div class="size-row">
+                ${(product.sizes || []).map((s) => `
+                  <button type="button" class="size-btn ${s === activeSize ? 'is-active' : ''}" data-size="${s}">${s}</button>`).join('')}
+              </div>
+            </div>
+            <div class="pdp-field">
+              <span>Quantity *</span>
+              <div class="qty-row">
+                <button type="button" data-qty-dec aria-label="Decrease">−</button>
+                <span data-qty>${qty}</span>
+                <button type="button" data-qty-inc aria-label="Increase">+</button>
+              </div>
+            </div>
+            <div class="pdp-actions">
+              <a class="btn btn-primary btn-block" href="${notifyHref()}">Add to cart</a>
+              <a class="btn btn-white btn-block" href="${notifyHref()}">Buy Now</a>
+            </div>
+            <p class="pdp-desc">${product.description}</p>
+            <p class="pdp-note">Checkout is not live on this draft — Add to cart / Buy Now open the waitlist with this piece prefills.</p>
+          </div>
+        </div>`;
 
-    el.querySelectorAll('[data-thumbs] .thumb').forEach((btn) => {
-      btn.addEventListener('click', () => setColor(btn.dataset.src, btn.dataset.color));
-    });
-
-    el.querySelectorAll('[data-color-row] .color-chip').forEach((btn) => {
-      btn.addEventListener('click', () => setColor(btn.dataset.src, btn.dataset.color));
-    });
-
-    el.querySelectorAll('[data-size-row] .size-chip').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        el.querySelectorAll('[data-size-row] .size-chip').forEach((chip) => {
-          chip.classList.remove('is-selected');
-          chip.setAttribute('aria-pressed', 'false');
+      el.querySelectorAll('.pdp-thumbs button').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const way = ways.find((c) => c.slug === btn.dataset.color) || ways.find((c) => c.image === btn.dataset.src);
+          if (way) activeColor = way;
+          render();
         });
-        btn.classList.add('is-selected');
-        btn.setAttribute('aria-pressed', 'true');
-        const colorName = el.querySelector('[data-color-row] .color-chip.is-selected')?.textContent.trim() || '';
-        if (notify) {
-          notify.href = `contact.html?piece=${encodeURIComponent(product.id)}&size=${encodeURIComponent(btn.dataset.size || '')}&color=${encodeURIComponent(colorName)}`;
-        }
       });
-    });
+      el.querySelectorAll('.swatch-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          activeColor = ways.find((c) => c.slug === btn.dataset.color) || activeColor;
+          render();
+        });
+      });
+      el.querySelectorAll('.size-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          activeSize = btn.dataset.size || activeSize;
+          render();
+        });
+      });
+      el.querySelector('[data-qty-dec]')?.addEventListener('click', () => {
+        qty = Math.max(1, qty - 1);
+        const n = el.querySelector('[data-qty]');
+        if (n) n.textContent = String(qty);
+      });
+      el.querySelector('[data-qty-inc]')?.addEventListener('click', () => {
+        qty += 1;
+        const n = el.querySelector('[data-qty]');
+        if (n) n.textContent = String(qty);
+      });
+    }
+
+    render();
 
     const ld = document.createElement('script');
     ld.type = 'application/ld+json';
@@ -298,7 +294,6 @@
       description: product.description,
       image: shots.map((src) => window.absoluteUrl(src)),
       brand: { '@type': 'Brand', name: cfg.brand.name },
-      color: ways.map((c) => c.name).join(', '),
       offers: {
         '@type': 'Offer',
         price: product.price,
@@ -312,59 +307,49 @@
   }
 
   function prefillContactPiece() {
-    const select = document.querySelector('[name="piece"]');
-    if (!select || !cfg.products) return;
     const params = new URLSearchParams(window.location.search);
     const current = params.get('piece') || '';
     const size = params.get('size') || '';
     const color = params.get('color') || '';
     const resolvedId = (cfg.productAliases && cfg.productAliases[current]) || current;
-    select.innerHTML = `<option value="">Just saying hello</option>` +
-      cfg.products.map((p) => `<option value="${p.name}" ${p.id === resolvedId ? 'selected' : ''}>${p.name}</option>`).join('');
+    const piece = findProduct(resolvedId);
 
-    const sizeSelect = document.querySelector('[name="size"]');
-    if (sizeSelect) {
-      const sizes = ['', 'S', 'M', 'L', 'XL', 'XXL', 'One size'];
-      sizeSelect.innerHTML = sizes.map((s) => {
-        const label = s || 'Not sure yet';
-        const selected = s && s === size ? 'selected' : '';
-        return `<option value="${s}" ${selected}>${label}</option>`;
+    // Checkbox-style piece interest (Wix form)
+    const pieceBox = document.querySelector('[data-piece-checks]');
+    if (pieceBox) {
+      const groups = ['Beware', 'The Mark', 'Sets', 'Accessories'];
+      pieceBox.innerHTML = groups.map((g) => {
+        const checked = piece && collectionName(piece.collection) === g ? 'checked' : '';
+        return `<label><input type="checkbox" name="piece_interest" value="${g}" ${checked}> ${g}</label>`;
       }).join('');
     }
 
-    const colorSelect = document.querySelector('[name="color"]');
-    if (colorSelect) {
-      const seen = new Set();
-      const colors = [''];
-      (cfg.products || []).forEach((p) => {
-        colorways(p).forEach((c) => {
-          if (c.name && !seen.has(c.name)) {
-            seen.add(c.name);
-            colors.push(c.name);
-          }
-        });
-      });
-      colorSelect.innerHTML = colors.map((c) => {
-        const label = c || 'Not sure yet';
-        const selected = c && c.toLowerCase() === color.toLowerCase() ? 'selected' : '';
-        return `<option value="${c}" ${selected}>${label}</option>`;
+    const sizeBox = document.querySelector('[data-size-checks]');
+    if (sizeBox) {
+      const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
+      sizeBox.innerHTML = sizes.map((s) => {
+        const checked = s === size ? 'checked' : '';
+        return `<label><input type="checkbox" name="size_interest" value="${s}" ${checked}> ${s}</label>`;
       }).join('');
+    }
+
+    // Hidden selects for FormSubmit compatibility if present
+    const select = document.querySelector('[name="piece"]');
+    if (select && cfg.products) {
+      select.innerHTML = `<option value="">Just saying hello</option>` +
+        cfg.products.map((p) => `<option value="${p.name}" ${p.id === resolvedId ? 'selected' : ''}>${p.name}</option>`).join('');
     }
 
     const message = document.querySelector('[name="message"]');
     if (message && !message.value && (current || size || color)) {
-      const piece = findProduct(current);
       const parts = [];
       if (piece) parts.push(`Interested in ${piece.name}.`);
       if (color) parts.push(`${color}.`);
       if (size) parts.push(`Size ${size}.`);
-      message.placeholder = parts.length
-        ? `${parts.join(' ')} City and anything else we should know.`
-        : message.placeholder;
+      if (parts.length) message.placeholder = `${parts.join(' ')} Any sizing requests or additional notes...`;
     }
   }
 
-  fillFeatured();
   fillCollections();
   fillShop();
   fillProductPage();
