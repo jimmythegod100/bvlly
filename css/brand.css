@@ -1,23 +1,42 @@
 /**
- * BRAND TOKENS — BVLLY
- * Black / cream / silver from the drop. Gothic display + tracked sans.
+ * BRAND TOKENS — BVLLY (matched to Wix site)
+ * https://andrewjamesmartine7.wixsite.com/my-site-1
  */
+@font-face {
+  font-family: 'old-english';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/old-english.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'makise';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/makise.woff2') format('woff2');
+}
+
 :root {
   --brand-primary: #cfc6b8;
-  --brand-dark: #f4efe6;
+  --brand-dark: #f8f3ea;
   --brand-bg: #070707;
   --brand-surface: #101010;
-  --brand-accent: #b8956a;
+  --brand-accent: #cfc6b8;
+  --brand-cream: #f8f3ea;
 
-  --font-display: 'UnifrakturMaguntia', 'Times New Roman', serif;
-  --font-heading: 'Outfit', system-ui, sans-serif;
-  --font-body: 'Outfit', system-ui, sans-serif;
+  --font-display: 'old-english', 'UnifrakturMaguntia', 'Times New Roman', serif;
+  --font-heading: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Space Grotesk', system-ui, sans-serif;
 
-  --text: var(--brand-dark);
+  --text: #ffffff;
   --text-muted: #9a9388;
   --border: #2a2a2a;
+  --border-light: rgba(255, 255, 255, 0.35);
   --photo-well: #111111;
   --radius: 0;
   --shadow: none;
-  --max-width: 1220px;
+  --max-width: 1280px;
+  --header-h: 5.5rem;
 }
