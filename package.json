@@ -4,6 +4,10 @@
   "description": "BVLLY — clothing drawn from the exotic bully",
   "scripts": {
     "dev": "python3 dev-server.py",
-    "start": "python3 dev-server.py"
+    "start": "python3 dev-server.py",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "jsdom": "^31.0.1"
   }
 }
