@@ -333,11 +333,27 @@
       }).join('');
     }
 
-    // Hidden selects for FormSubmit compatibility if present
-    const select = document.querySelector('[name="piece"]');
-    if (select && cfg.products) {
-      select.innerHTML = `<option value="">Just saying hello</option>` +
-        cfg.products.map((p) => `<option value="${p.name}" ${p.id === resolvedId ? 'selected' : ''}>${p.name}</option>`).join('');
+    // Preserve the specific PDP selection for FormSubmit; placeholders are not submitted.
+    const pieceField = document.querySelector('[name="piece"]');
+    if (pieceField && cfg.products) {
+      if (pieceField.tagName === 'SELECT') {
+        pieceField.innerHTML = `<option value="">Just saying hello</option>` +
+          cfg.products.map((p) => `<option value="${p.name}" ${p.id === resolvedId ? 'selected' : ''}>${p.name}</option>`).join('');
+      } else if (piece) {
+        pieceField.value = piece.name;
+      }
+    }
+
+    const form = document.querySelector('[data-contact-form]');
+    if (form && color) {
+      let colorHidden = form.querySelector('input[name="color"]');
+      if (!colorHidden) {
+        colorHidden = document.createElement('input');
+        colorHidden.type = 'hidden';
+        colorHidden.name = 'color';
+        form.appendChild(colorHidden);
+      }
+      colorHidden.value = color;
     }
 
     const message = document.querySelector('[name="message"]');

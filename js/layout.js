@@ -387,7 +387,7 @@
           pieceHidden.name = 'piece';
           form.appendChild(pieceHidden);
         }
-        pieceHidden.value = pieces.join(', ') || '';
+        pieceHidden.value = pieceHidden.value || pieces.join(', ') || '';
         let sizeHidden = form.querySelector('input[name="size"]');
         if (!sizeHidden) {
           sizeHidden = document.createElement('input');
