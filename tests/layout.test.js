@@ -85,3 +85,19 @@ test('mobile navigation toggle keeps menu state and labels in sync', () => {
   assert.equal(toggle.getAttribute('aria-expanded'), 'false');
   assert.equal(toggle.getAttribute('aria-label'), 'Open menu');
 });
+
+test('shop SEO URLs preserve the active collection filter', () => {
+  const dom = loadLayoutPage(
+    'shop.html?collection=sets',
+    'shop',
+    '<header data-site-header></header><main></main><footer data-site-footer></footer>',
+    'Shop | {{BRAND}}'
+  );
+  const { document } = dom.window;
+
+  assert.equal(document.querySelector('link[rel="canonical"]')?.href, 'https://jimmythegod100.github.io/bvlly/shop.html?collection=sets');
+  assert.equal(document.querySelector('meta[property="og:url"]')?.getAttribute('content'), 'https://jimmythegod100.github.io/bvlly/shop.html?collection=sets');
+
+  const jsonLd = JSON.parse(document.getElementById('site-jsonld').textContent);
+  assert.equal(jsonLd.url, 'https://jimmythegod100.github.io/bvlly');
+});

@@ -63,6 +63,23 @@ test('product aliases and selections keep add-to-cart pointed at the waitlist pr
   );
 });
 
+test('product structured data uses resolved catalog URLs and absolute image paths', () => {
+  const dom = loadCatalogPage(
+    'product.html?id=mark-zip-set',
+    '<div data-product-page></div>'
+  );
+  const { document } = dom.window;
+
+  const jsonLd = JSON.parse(document.getElementById('product-jsonld').textContent);
+
+  assert.equal(jsonLd.name, 'Mark Zip Set');
+  assert.equal(jsonLd.offers.url, 'https://jimmythegod100.github.io/bvlly/product.html?id=mark-hood');
+  assert.deepEqual(jsonLd.image, [
+    'https://jimmythegod100.github.io/bvlly/images/wix-clone/products/mark-zip-black.jpg?v=20261029a',
+    'https://jimmythegod100.github.io/bvlly/images/wix-clone/products/mark-zip-pink.jpg?v=20261029a'
+  ]);
+});
+
 test('quantity controls never decrement below one', () => {
   const dom = loadCatalogPage(
     'product.html?id=mark-tee',
