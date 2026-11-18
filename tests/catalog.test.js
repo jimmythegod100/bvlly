@@ -63,6 +63,18 @@ test('product aliases and selections keep add-to-cart pointed at the waitlist pr
   );
 });
 
+test('unknown product URLs render a shop recovery state without product schema', () => {
+  const dom = loadCatalogPage(
+    'product.html?id=missing-piece',
+    '<div data-product-page></div>'
+  );
+  const { document } = dom.window;
+
+  assert.equal(document.querySelector('.error-page')?.textContent.includes('not in the catalog'), true);
+  assert.equal(document.querySelector('.error-page .btn-primary')?.getAttribute('href'), 'shop.html');
+  assert.equal(document.getElementById('product-jsonld'), null);
+});
+
 test('product structured data uses resolved catalog URLs and absolute image paths', () => {
   const dom = loadCatalogPage(
     'product.html?id=mark-zip-set',
