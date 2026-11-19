@@ -25,6 +25,19 @@ function loadLayoutPage(path, page, body, title) {
   return dom;
 }
 
+function loadProductPage(path) {
+  const dom = createPage(
+    path,
+    'product',
+    '<header data-site-header></header><main><div data-product-page></div></main><footer data-site-footer></footer>',
+    'Product | {{BRAND}}'
+  );
+  loadScript(dom, 'js/site-config.js');
+  loadScript(dom, 'js/catalog.js');
+  loadScript(dom, 'js/layout.js');
+  return dom;
+}
+
 test('contact submission rolls selected product interests into FormSubmit fields', () => {
   const dom = loadLayoutPage(
     'contact.html',
@@ -100,4 +113,16 @@ test('shop SEO URLs preserve the active collection filter', () => {
 
   const jsonLd = JSON.parse(document.getElementById('site-jsonld').textContent);
   assert.equal(jsonLd.url, 'https://jimmythegod100.github.io/bvlly');
+});
+
+test('product SEO uses rendered product title and canonical product URL', () => {
+  const dom = loadProductPage('product.html?id=mark-zip-set&color=pink');
+  const { document } = dom.window;
+
+  assert.equal(document.querySelector('h1')?.textContent, 'Mark Zip Set');
+  assert.equal(document.title, 'Mark Zip Set | BVLLY');
+  assert.equal(document.querySelector('meta[property="og:type"]')?.getAttribute('content'), 'product');
+  assert.equal(document.querySelector('meta[property="og:title"]')?.getAttribute('content'), 'Mark Zip Set | BVLLY');
+  assert.equal(document.querySelector('link[rel="canonical"]')?.href, 'https://jimmythegod100.github.io/bvlly/product.html?id=mark-zip-set');
+  assert.equal(document.querySelector('meta[property="og:url"]')?.getAttribute('content'), 'https://jimmythegod100.github.io/bvlly/product.html?id=mark-zip-set');
 });
