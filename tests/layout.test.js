@@ -70,6 +70,27 @@ test('contact submission rolls selected product interests into FormSubmit fields
   assert.equal(document.querySelector('input[name="size"]').value, 'M, XL');
 });
 
+test('footer waitlist form posts deterministic FormSubmit fields', () => {
+  const dom = loadLayoutPage(
+    'index.html',
+    'home',
+    '<header data-site-header></header><main></main><footer data-site-footer></footer>',
+    'Home | {{BRAND}}'
+  );
+  const { document } = dom.window;
+  const form = document.querySelector('.newsletter-form');
+
+  assert.equal(form.getAttribute('method'), 'POST');
+  assert.equal(form.getAttribute('action'), 'https://formsubmit.co/hello@bvlly.com');
+  assert.equal(form.querySelector('input[name="_subject"]').value, 'BVLLY drop waitlist');
+  assert.equal(form.querySelector('input[name="_next"]').value, 'https://jimmythegod100.github.io/bvlly/thanks.html');
+  assert.equal(form.querySelector('input[name="_captcha"]').value, 'false');
+  assert.equal(form.querySelector('input[name="message"]').value, 'Footer waitlist signup');
+  assert.equal(form.querySelector('input[name="_honey"]').getAttribute('autocomplete'), 'off');
+  assert.equal(form.querySelector('input[name="email"]').required, true);
+  assert.equal(form.querySelector('input[name="email"]').getAttribute('autocomplete'), 'email');
+});
+
 test('mobile navigation toggle keeps menu state and labels in sync', () => {
   const dom = loadLayoutPage(
     'shop.html?collection=sets',
