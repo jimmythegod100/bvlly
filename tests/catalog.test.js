@@ -129,3 +129,24 @@ test('contact form prefills aliased products, color, and size from PDP links', (
     'Interested in Mark Zip Set. Pink. Size XL. Any sizing requests or additional notes...'
   );
 });
+
+test('contact URL prefills do not overwrite an existing visitor message', () => {
+  const dom = loadCatalogPage(
+    'contact.html?piece=mark-tee&size=M&color=Black',
+    `
+      <div data-piece-checks></div>
+      <div data-size-checks></div>
+      <select name="piece"></select>
+      <textarea name="message">Please hold one for pickup.</textarea>
+    `
+  );
+  const { document } = dom.window;
+
+  const message = document.querySelector('textarea[name="message"]');
+
+  assert.equal(document.querySelector('input[name="piece_interest"][value="The Mark"]')?.checked, true);
+  assert.equal(document.querySelector('input[name="size_interest"][value="M"]')?.checked, true);
+  assert.equal(document.querySelector('select[name="piece"]')?.value, 'Mark Tee');
+  assert.equal(message.value, 'Please hold one for pickup.');
+  assert.equal(message.getAttribute('placeholder'), null);
+});
